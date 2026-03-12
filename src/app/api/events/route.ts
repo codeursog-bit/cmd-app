@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { getSession, requireAuth } from '@/lib/auth'
+import { requireAuth } from '@/lib/auth'
 import { ok, created, error, serverError } from '@/lib/api'
 import { uniqueSlug } from '@/lib/slugify'
 

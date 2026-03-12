@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
-import PublicLayout from '@/components/public/PublicLayout'
+
 
 interface Props { params: Promise<{ slug: string }> }
 
@@ -43,6 +43,30 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       images: post.coverUrl ? [post.coverUrl] : [],
     },
   }
+}
+
+
+// ── Boutons de partage (Server Component compatible) ─────────────────────────
+function ShareButtons({ url, title, excerpt }: { url: string; title: string; excerpt: string }) {
+  const enc = encodeURIComponent
+  const text = `${title}\n${excerpt}`
+  const platforms = [
+    { href: `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`, color: 'bg-[#1877F2]', label: 'f' },
+    { href: `https://wa.me/?text=${enc(text + '\n\n' + url)}`,          color: 'bg-[#25D366]', label: 'W' },
+    { href: `https://t.me/share/url?url=${enc(url)}&text=${enc(title)}`,  color: 'bg-[#229ED9]', label: 'T' },
+    { href: `https://twitter.com/intent/tweet?text=${enc(title)}&url=${enc(url)}`, color: 'bg-black', label: 'X' },
+  ]
+  return (
+    <div className="flex items-center gap-2">
+      <span className="text-brand-500 text-xs font-bold uppercase tracking-widest mr-1">Partager</span>
+      {platforms.map(p => (
+        <a key={p.label} href={p.href} target="_blank" rel="noopener noreferrer"
+          className={`w-8 h-8 ${p.color} rounded-lg flex items-center justify-center hover:opacity-80 transition-opacity`}>
+          <span className="text-white text-xs font-black">{p.label}</span>
+        </a>
+      ))}
+    </div>
+  )
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -89,7 +113,7 @@ export default async function BlogSlugPage({ params }: Props) {
   const ytId     = post.videoUrl ? getYoutubeId(post.videoUrl) : null
 
   return (
-    <PublicLayout>
+
       <article className="min-h-screen bg-white">
 
         {/* ── Hero ── */}
@@ -106,14 +130,17 @@ export default async function BlogSlugPage({ params }: Props) {
             </div>
             <h1 className="font-display text-4xl md:text-5xl font-bold text-white leading-tight mb-6">{post.title}</h1>
             {post.excerpt && <p className="text-brand-300 text-xl leading-relaxed">{post.excerpt}</p>}
-            <div className="flex items-center gap-3 mt-8 pt-8 border-t border-brand-900">
-              <div className="w-10 h-10 rounded-full bg-brand-800 border border-brand-700 flex items-center justify-center text-brand-300 font-bold text-sm">
-                {post.author.firstName[0]}{post.author.lastName[0]}
+            <div className="flex items-center justify-between gap-4 mt-8 pt-8 border-t border-brand-900 flex-wrap">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-brand-800 border border-brand-700 flex items-center justify-center text-brand-300 font-bold text-sm">
+                  {post.author.firstName[0]}{post.author.lastName[0]}
+                </div>
+                <div>
+                  <p className="text-white font-medium text-sm">{post.author.firstName} {post.author.lastName}</p>
+                  <p className="text-brand-500 text-xs">{post.church?.name}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-white font-medium text-sm">{post.author.firstName} {post.author.lastName}</p>
-                <p className="text-brand-500 text-xs">{post.church?.name}</p>
-              </div>
+              <ShareButtons url={`${process.env.NEXT_PUBLIC_APP_URL || ''}/blog/${post.slug}`} title={post.title} excerpt={post.excerpt || ''} />
             </div>
           </div>
         </div>
@@ -204,6 +231,6 @@ export default async function BlogSlugPage({ params }: Props) {
         </div>
 
       </article>
-    </PublicLayout>
+
   )
 }

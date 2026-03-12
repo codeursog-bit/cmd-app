@@ -1,5 +1,5 @@
 'use client'
-import { use } from 'react'
+
 import { useApi } from '@/hooks/useApi'
 import Link from 'next/link'
 
@@ -9,8 +9,8 @@ interface Baptism {
   member: { firstName: string; lastName: string; photoUrl: string | null; church: { name: string; logoUrl: string | null } }
 }
 
-export default function CarteBapteme({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params)
+export default function CarteBapteme({ params }: { params: { id: string } }) {
+  const { id } = params
   const { data: baptism, loading } = useApi<Baptism>(`/api/baptisms/${id}`)
 
   if (loading) return <div className="flex items-center justify-center min-h-screen"><div className="w-8 h-8 border-2 border-brand-600 border-t-transparent rounded-full animate-spin" /></div>

@@ -18,14 +18,15 @@ interface DashboardData {
   socialAccounts: { id: string; platform: string; accountName: string; isActive: boolean }[]
 }
 
-const Skeleton = ({ className }: { className: string }) => (
+const Skeleton = ({ className }: { className: string; key?: number }) => (
   <div className={`bg-neutral-100 animate-pulse rounded ${className}`} />
 )
 
 export default function DashboardPage() {
   const { user } = useAuth()
   const churchId = user?.church?.id
-  const { data, loading } = useApi<DashboardData>(churchId ? `/api/dashboard?churchId=${churchId}` : null)
+  const dashUrl = !user ? null : churchId ? `/api/dashboard?churchId=${churchId}` : user.role === 'SUPER_ADMIN' ? '/api/dashboard' : null
+  const { data, loading } = useApi<DashboardData>(dashUrl)
 
   const currentDate = new Intl.DateTimeFormat('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }).format(new Date())
   const kpis = data?.kpis
@@ -84,7 +85,7 @@ export default function DashboardPage() {
                   {data?.recentMembers.map(m => (
                     <tr key={m.id} className="group hover:bg-neutral-50/50 transition-colors">
                       <td className="py-4">
-                        <Link href={`/membres/${m.id}`} className="flex items-center gap-3 hover:text-brand-600 transition-colors">
+                        <Link href={`/admin/membres/${m.id}`} className="flex items-center gap-3 hover:text-brand-600 transition-colors">
                           <div className="w-8 h-8 rounded-full bg-brand-50 flex items-center justify-center text-brand-600 text-xs font-bold border border-brand-100">
                             {m.name.split(' ').map(n=>n[0]).join('').slice(0,2)}
                           </div>

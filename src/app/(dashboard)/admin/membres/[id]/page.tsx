@@ -1,5 +1,5 @@
 'use client'
-import { use } from 'react'
+
 import { useApi, apiFetch } from '@/hooks/useApi'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -21,8 +21,8 @@ const IconTrash = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="n
 
 const Skeleton = ({cls}:{cls:string}) => <div className={`bg-neutral-100 animate-pulse rounded ${cls}`}/>
 
-export default function MemberProfilePage({ params }: { params: Promise<{id:string}> }) {
-  const { id } = use(params)
+export default function MemberProfilePage({ params }: { params: { id: string } }) {
+  const { id } = params
   const { data: member, loading } = useApi<Member>(`/api/members/${id}`)
   const router = useRouter()
   const [deleting, setDeleting] = useState(false)

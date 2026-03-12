@@ -100,7 +100,7 @@ export default function MembersListPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <Link href={`/membres/${m.id}`} className="font-bold text-sm text-neutral-900 hover:text-brand-600 transition-colors">
+                      <Link href={`/admin/membres/${m.id}`} className="font-bold text-sm text-neutral-900 hover:text-brand-600 transition-colors">
                         {m.firstName} {m.lastName}
                       </Link>
                     </td>
@@ -116,7 +116,7 @@ export default function MembersListPage() {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <Link href={`/membres/${m.id}`} className="text-neutral-400 hover:text-brand-600 cursor-pointer transition-colors inline-block" title="Voir">
+                      <Link href={`/admin/membres/${m.id}`} className="text-neutral-400 hover:text-brand-600 cursor-pointer transition-colors inline-block" title="Voir">
                         <IconEye />
                       </Link>
                     </td>

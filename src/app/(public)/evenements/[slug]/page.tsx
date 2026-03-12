@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
-import PublicLayout from '@/components/public/PublicLayout'
+
 
 interface Props { params: Promise<{ slug: string }> }
 
@@ -44,6 +44,30 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
+
+// ── Boutons de partage ────────────────────────────────────────────────────────
+function ShareButtons({ url, title, description }: { url: string; title: string; description: string }) {
+  const enc = encodeURIComponent
+  const text = `${title}\n${description}`
+  const platforms = [
+    { href: `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`, color: 'bg-[#1877F2]', label: 'f' },
+    { href: `https://wa.me/?text=${enc(text + '\n\n' + url)}`,          color: 'bg-[#25D366]', label: 'W' },
+    { href: `https://t.me/share/url?url=${enc(url)}&text=${enc(title)}`,  color: 'bg-[#229ED9]', label: 'T' },
+    { href: `https://twitter.com/intent/tweet?text=${enc(title)}&url=${enc(url)}`, color: 'bg-black', label: 'X' },
+  ]
+  return (
+    <div className="flex items-center gap-2">
+      <span className="text-brand-500 text-xs font-bold uppercase tracking-widest mr-1">Partager</span>
+      {platforms.map(p => (
+        <a key={p.label} href={p.href} target="_blank" rel="noopener noreferrer"
+          className={`w-8 h-8 ${p.color} rounded-lg flex items-center justify-center hover:opacity-80 transition-opacity`}>
+          <span className="text-white text-xs font-black">{p.label}</span>
+        </a>
+      ))}
+    </div>
+  )
+}
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function getYoutubeId(url: string) {
   const m = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/)
@@ -66,7 +90,7 @@ export default async function EvenementPublicPage({ params }: Props) {
   const ytId = event.videoUrl ? getYoutubeId(event.videoUrl) : null
 
   return (
-    <PublicLayout>
+
       <div className="min-h-screen bg-white">
 
         {/* ── Hero ── */}
@@ -89,6 +113,13 @@ export default async function EvenementPublicPage({ params }: Props) {
                 <h1 className="font-display text-4xl md:text-5xl font-bold text-white leading-tight mb-4">{event.title}</h1>
                 {event.description && <p className="text-brand-300 text-lg leading-relaxed">{event.description}</p>}
                 <p className="text-brand-500 text-sm mt-3">{event.church.name}</p>
+                <div className="mt-5">
+                  <ShareButtons
+                    url={`${process.env.NEXT_PUBLIC_APP_URL || ''}/evenements/${event.slug}`}
+                    title={event.title}
+                    description={event.description || ''}
+                  />
+                </div>
               </div>
               {/* Date card */}
               <div className="bg-brand-900 border border-brand-800 rounded-2xl p-6 text-center min-w-[140px]">
@@ -194,6 +225,6 @@ export default async function EvenementPublicPage({ params }: Props) {
         </div>
 
       </div>
-    </PublicLayout>
+
   )
 }

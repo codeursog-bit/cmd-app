@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import PublicLayout from '@/components/public/PublicLayout'
+
 
 const PURPOSES = ['Offrande générale','Dîme','Projet de construction','Mission évangélisation','Aide sociale','Jeunesse','Autre']
 const METHODS  = [{ key: 'mobile_money', label: '📱 Mobile Money' },{ key: 'virement', label: '🏦 Virement bancaire' },{ key: 'especes', label: '💵 Espèces (à l\'église)' }]
@@ -48,7 +48,7 @@ export default function DonPage() {
   }
 
   return (
-    <PublicLayout>
+    <div>
       {/* Hero */}
       <section className="bg-gradient-to-b from-brand-950 to-brand-900 text-white py-20 px-4">
         <div className="max-w-2xl mx-auto text-center">
@@ -227,6 +227,6 @@ export default function DonPage() {
           )}
         </div>
       </section>
-    </PublicLayout>
+    </div>
   )
 }

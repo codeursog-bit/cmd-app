@@ -25,15 +25,30 @@ const Ctx = createContext<AuthCtx>({
   logout: async () => {},
 })
 
+// Normalise la réponse /api/auth/me qui retourne churches:[{church:{}}]
+// en SessionUser avec church:{} directement
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function normalizeUser(data: any): SessionUser {
+  return {
+    id:        data.id,
+    email:     data.email,
+    firstName: data.firstName,
+    lastName:  data.lastName,
+    role:      data.role,
+    avatarUrl: data.avatarUrl ?? null,
+    church:    data.churches?.[0]?.church ?? data.church ?? null,
+  }
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser]     = useState<SessionUser | null>(null)
+  const [user, setUser]       = useState<SessionUser | null>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
 
   useEffect(() => {
     fetch('/api/auth/me', { credentials: 'include' })
       .then(r => r.ok ? r.json() : null)
-      .then(j => { if (j?.data) setUser(j.data) })
+      .then(j => { if (j?.data) setUser(normalizeUser(j.data)) })
       .finally(() => setLoading(false))
   }, [])
 
@@ -41,7 +56,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const res  = await fetch('/api/auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }), credentials: 'include' })
     const json = await res.json()
     if (!res.ok) return json.error || 'Identifiants invalides'
-    setUser(json.data.user)
+    // /api/auth retourne directement user (pas via churches)
+    setUser(normalizeUser(json.data.user))
     return null
   }
 

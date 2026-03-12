@@ -20,12 +20,11 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    await requireAuth()
-    const session = await getSession()
+    const session = await requireAuth()
     const { title, description, startDate, endDate, location, teacherName, churchId } = await req.json()
     if (!title || !startDate) return error('Titre et date de début requis')
     const course = await prisma.baptismCourse.create({
-      data: { title, description, startDate: new Date(startDate), endDate: endDate ? new Date(endDate) : null, location, teacherName, churchId: churchId || session!.churchId! }
+      data: { title, description, startDate: new Date(startDate), endDate: endDate ? new Date(endDate) : null, location, teacherName, churchId: churchId || session.churchId! }
     })
     return created(course)
   } catch (err) { return serverError(err) }

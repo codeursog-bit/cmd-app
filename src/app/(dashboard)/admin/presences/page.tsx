@@ -15,17 +15,29 @@ export default function PresencesPage() {
   const [saved, setSaved]                 = useState(false)
   const [search, setSearch]               = useState('')
 
-  const { data: eventsData } = useApi<{events:Event[]}>(
-    user?.church?.id ? `/api/events?churchId=${user.church.id}&limit=20` : null
-  )
-  const { data: membersData } = useApi<{members:Member[]}>(
-    user?.church?.id ? `/api/members?churchId=${user.church.id}&status=active&limit=200` : null
-  )
+  // Charge TOUS les events si SUPER_ADMIN (pas de churchId), sinon filtre par église
+  const eventsUrl = user
+    ? (user.role === 'SUPER_ADMIN'
+        ? '/api/events?limit=50'
+        : user.church?.id
+          ? `/api/events?churchId=${user.church.id}&limit=50`
+          : null)
+    : null
+
+  const membersUrl = user
+    ? (user.role === 'SUPER_ADMIN'
+        ? '/api/members?status=active&limit=200'
+        : user.church?.id
+          ? `/api/members?churchId=${user.church.id}&status=active&limit=200`
+          : null)
+    : null
+
+  const { data: eventsData } = useApi<{events:Event[]}>(eventsUrl)
+  const { data: membersData } = useApi<{members:Member[]}>(membersUrl)
   const { data: existingAttendances, refetch } = useApi<{attendances:Attendance[]}>(
     selectedEvent ? `/api/attendances?eventId=${selectedEvent.id}&limit=500` : null
   )
 
-  // Sync existing attendances when event selected
   const handleSelectEvent = (ev: Event) => {
     setSelectedEvent(ev)
     setSaved(false)
@@ -34,9 +46,7 @@ export default function PresencesPage() {
     setAttendances(map)
   }
 
-  const toggleMember = (id: string) => {
-    setAttendances(prev => ({ ...prev, [id]: !prev[id] }))
-  }
+  const toggleMember = (id: string) => setAttendances(prev => ({ ...prev, [id]: !prev[id] }))
 
   const markAll = (val: boolean) => {
     const all: Record<string,boolean> = {}
@@ -64,7 +74,6 @@ export default function PresencesPage() {
   const presentCount = Object.values(attendances).filter(Boolean).length
   const total = membersData?.members.length || 0
   const rate = total ? Math.round((presentCount / total) * 100) : 0
-
   const fmt = (d:string) => new Intl.DateTimeFormat('fr-FR', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' }).format(new Date(d))
 
   return (
@@ -79,7 +88,7 @@ export default function PresencesPage() {
         <div className="space-y-4">
           <h3 className="font-bold text-neutral-700 text-sm uppercase tracking-widest">Choisir un événement</h3>
           <div className="space-y-2 max-h-[70vh] overflow-y-auto pr-1">
-            {eventsData?.events.length ? eventsData.events.map(ev => (
+            {eventsData?.events && eventsData.events.length > 0 ? eventsData.events.map(ev => (
               <div key={ev.id} onClick={() => handleSelectEvent(ev)}
                 className={`p-4 rounded-xl border cursor-pointer transition-all ${selectedEvent?.id===ev.id?'border-brand-600 bg-brand-50':'border-neutral-200 hover:border-brand-200 bg-white'}`}>
                 <p className={`font-bold text-sm ${selectedEvent?.id===ev.id?'text-brand-700':'text-neutral-900'}`}>{ev.title}</p>
@@ -87,7 +96,10 @@ export default function PresencesPage() {
                 <p className="text-[10px] text-neutral-300 mt-1">{ev._count.attendances} présences enregistrées</p>
               </div>
             )) : (
-              <p className="text-sm text-neutral-400 italic">Aucun événement disponible.</p>
+              <div className="bg-white rounded-xl border border-neutral-200 p-6 text-center">
+                <p className="text-sm font-bold text-neutral-500">Aucun événement</p>
+                <p className="text-xs text-neutral-400 mt-1">Créez d&apos;abord un événement dans la section Événements</p>
+              </div>
             )}
           </div>
         </div>
@@ -107,7 +119,6 @@ export default function PresencesPage() {
             </div>
           ) : (
             <div className="bg-white rounded-2xl shadow-sm border border-neutral-100 overflow-hidden">
-              {/* Header */}
               <div className="px-6 py-5 border-b border-neutral-100">
                 <div className="flex items-center justify-between gap-4">
                   <div>
@@ -115,7 +126,6 @@ export default function PresencesPage() {
                     <p className="text-sm text-neutral-500">{fmt(selectedEvent.startDate)}</p>
                   </div>
                   <div className="flex items-center gap-4">
-                    {/* Taux */}
                     <div className="text-center">
                       <div className="font-display text-3xl font-bold text-brand-600">{rate}%</div>
                       <div className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">{presentCount}/{total}</div>
@@ -129,7 +139,6 @@ export default function PresencesPage() {
                 {saved && <div className="mt-3 bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-2 rounded-lg text-sm font-bold">✓ Présences enregistrées !</div>}
               </div>
 
-              {/* Toolbar */}
               <div className="px-6 py-3 bg-neutral-50 border-b border-neutral-100 flex items-center gap-4">
                 <input type="text" placeholder="Filtrer par nom..." value={search} onChange={e => setSearch(e.target.value)}
                   className="w-48 border border-neutral-200 rounded-lg px-3 h-8 text-xs focus:outline-none focus:border-brand-300 bg-white"/>
@@ -137,14 +146,12 @@ export default function PresencesPage() {
                 <button onClick={() => markAll(false)} className="text-xs font-bold text-red-400 hover:underline">Tout décocher</button>
               </div>
 
-              {/* Liste */}
               <div className="divide-y divide-neutral-50 max-h-[50vh] overflow-y-auto">
-                {filteredMembers.map(m => {
+                {filteredMembers.length > 0 ? filteredMembers.map(m => {
                   const isPresent = attendances[m.id] ?? false
                   return (
                     <div key={m.id} onClick={() => toggleMember(m.id)}
                       className={`flex items-center gap-4 px-6 py-3 cursor-pointer transition-all hover:bg-neutral-50 ${isPresent?'bg-emerald-50/30':''}`}>
-                      {/* Checkbox */}
                       <div className={`w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 transition-all ${isPresent?'bg-emerald-500 border-emerald-500':'border-neutral-300'}`}>
                         {isPresent && <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>}
                       </div>
@@ -160,7 +167,11 @@ export default function PresencesPage() {
                       </span>
                     </div>
                   )
-                })}
+                }) : (
+                  <div className="text-center py-12 text-neutral-300">
+                    <p className="text-sm font-bold">Aucun membre trouvé</p>
+                  </div>
+                )}
               </div>
             </div>
           )}

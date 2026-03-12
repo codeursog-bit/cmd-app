@@ -1,5 +1,5 @@
 'use client'
-import { use, useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useApi, apiFetch } from '@/hooks/useApi'
 import { ImageUpload } from '@/components/ui/ImageUpload'
 import Link from 'next/link'
@@ -25,11 +25,11 @@ function SharePanel({ title, text, url, onClose }: { title: string; text: string
   const [copied, setCopied] = useState(false)
   const enc = encodeURIComponent
   const links = {
-    facebook:  `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}&quote=${enc(text)}`,
-    whatsapp:  `https://wa.me/?text=${enc(text + '\n\n' + url)}`,
-    twitter:   `https://twitter.com/intent/tweet?text=${enc(text)}&url=${enc(url)}`,
-    telegram:  `https://t.me/share/url?url=${enc(url)}&text=${enc(text)}`,
-    linkedin:  `https://www.linkedin.com/sharing/share-offsite/?url=${enc(url)}`,
+    facebook: `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}&quote=${enc(text)}`,
+    whatsapp: `https://wa.me/?text=${enc(text + '\n\n' + url)}`,
+    twitter:  `https://twitter.com/intent/tweet?text=${enc(text)}&url=${enc(url)}`,
+    telegram: `https://t.me/share/url?url=${enc(url)}&text=${enc(text)}`,
+    linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${enc(url)}`,
   }
   const PLATFORMS = [
     { key: 'facebook', label: 'Facebook',  color: 'bg-[#1877F2]', icon: 'F' },
@@ -77,8 +77,8 @@ function SharePanel({ title, text, url, onClose }: { title: string; text: string
   )
 }
 
-export default function EvenementDetailPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = use(params)
+export default function EvenementDetailPage({ params }: { params: { slug: string } }) {
+  const { slug } = params
   const { data: event, loading, refetch } = useApi<Event>(`/api/events/${slug}`)
   const router = useRouter()
   const [editing, setEditing] = useState(false)
@@ -86,13 +86,13 @@ export default function EvenementDetailPage({ params }: { params: Promise<{ slug
   const [error, setError]     = useState<string | null>(null)
   const [shareOpen, setShare] = useState(false)
 
-  const [title, setTitle]       = useState('')
-  const [description, setDesc]  = useState('')
-  const [location, setLoc]      = useState('')
-  const [coverUrl, setCover]    = useState('')
-  const [startDate, setStart]   = useState('')
-  const [endDate, setEnd]       = useState('')
-  const [status, setStatus]     = useState('UPCOMING')
+  const [title, setTitle]      = useState('')
+  const [description, setDesc] = useState('')
+  const [location, setLoc]     = useState('')
+  const [coverUrl, setCover]   = useState('')
+  const [startDate, setStart]  = useState('')
+  const [endDate, setEnd]      = useState('')
+  const [status, setStatus]    = useState('UPCOMING')
 
   useEffect(() => {
     if (event) {
@@ -188,7 +188,6 @@ export default function EvenementDetailPage({ params }: { params: Promise<{ slug
         {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">{error}</div>}
 
         <div className="bg-white rounded-2xl shadow-sm border border-neutral-100 overflow-hidden">
-          {/* Image de couverture en haut si présente */}
           {event.coverUrl && !editing && (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={event.coverUrl} alt={event.title} className="w-full h-64 object-cover" />
@@ -203,10 +202,7 @@ export default function EvenementDetailPage({ params }: { params: Promise<{ slug
                   <input type="text" value={title} onChange={e => setTitle(e.target.value)}
                     className="w-full border border-neutral-200 rounded-lg px-4 h-11 text-sm focus:outline-none focus:border-brand-500" />
                 </div>
-
-                {/* IMAGE */}
                 <ImageUpload value={coverUrl} onChange={setCover} />
-
                 <div>
                   <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-500 mb-1">Description</label>
                   <textarea value={description} onChange={e => setDesc(e.target.value)} rows={3}

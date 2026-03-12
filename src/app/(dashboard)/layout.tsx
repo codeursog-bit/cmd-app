@@ -1,3 +1,4 @@
+import React from 'react'
 import DashboardLayout from '@/components/admin/DashboardLayout'
 
 export default function Layout({ children }: { children: React.ReactNode }) {

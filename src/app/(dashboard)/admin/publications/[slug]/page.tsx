@@ -1,5 +1,5 @@
 'use client'
-import { use, useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useApi, apiFetch } from '@/hooks/useApi'
 import { ImageUpload } from '@/components/ui/ImageUpload'
 import Link from 'next/link'
@@ -24,11 +24,11 @@ function SharePanel({ title, text, url, onClose }: { title: string; text: string
   const [copied, setCopied] = useState(false)
   const enc = encodeURIComponent
   const links = {
-    facebook:  `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}&quote=${enc(text)}`,
-    whatsapp:  `https://wa.me/?text=${enc(text + '\n\n' + url)}`,
-    twitter:   `https://twitter.com/intent/tweet?text=${enc(text)}&url=${enc(url)}`,
-    telegram:  `https://t.me/share/url?url=${enc(url)}&text=${enc(text)}`,
-    linkedin:  `https://www.linkedin.com/sharing/share-offsite/?url=${enc(url)}`,
+    facebook: `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}&quote=${enc(text)}`,
+    whatsapp: `https://wa.me/?text=${enc(text + '\n\n' + url)}`,
+    twitter:  `https://twitter.com/intent/tweet?text=${enc(text)}&url=${enc(url)}`,
+    telegram: `https://t.me/share/url?url=${enc(url)}&text=${enc(text)}`,
+    linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${enc(url)}`,
   }
   const PLATFORMS = [
     { key: 'facebook', label: 'Facebook',  color: 'bg-[#1877F2]', icon: 'F' },
@@ -76,8 +76,8 @@ function SharePanel({ title, text, url, onClose }: { title: string; text: string
   )
 }
 
-export default function PublicationEditPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = use(params)
+export default function PublicationEditPage({ params }: { params: { slug: string } }) {
+  const { slug } = params
   const { data: post, loading, refetch } = useApi<Post>(`/api/posts/${slug}`)
   const router = useRouter()
   const [saving, setSaving]   = useState(false)
@@ -180,10 +180,7 @@ export default function PublicationEditPage({ params }: { params: Promise<{ slug
                 <input type="text" value={title} onChange={e => setTitle(e.target.value)}
                   className="w-full border border-neutral-200 rounded-lg px-4 h-12 text-base font-bold focus:outline-none focus:border-brand-500 transition-colors" />
               </div>
-
-              {/* IMAGE */}
               <ImageUpload value={coverUrl} onChange={setCover} />
-
               <div>
                 <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-500 mb-1">Extrait</label>
                 <textarea value={excerpt} onChange={e => setExcerpt(e.target.value)} rows={2}
