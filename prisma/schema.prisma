@@ -1,0 +1,459 @@
+// ============================================================
+// CHURCH MANAGEMENT SYSTEM - Prisma Schema v2
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL_UNPOOLED")
+}
+
+enum Role {
+  SUPER_ADMIN
+  PASTOR
+  DEPT_LEADER
+  MEDIA_MANAGER
+  BAPTISM_TEACHER
+  SECRETARY
+}
+
+enum PostType {
+  ARTICLE
+  SERMON
+  TESTIMONY
+  ANNOUNCEMENT
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum EventStatus {
+  UPCOMING
+  ONGOING
+  COMPLETED
+  CANCELLED
+}
+
+enum BaptismType {
+  WATER
+  HOLY_SPIRIT
+}
+
+enum BaptismCourseStatus {
+  ONGOING
+  COMPLETED
+  DROPPED
+}
+
+enum SocialPlatform {
+  FACEBOOK
+  INSTAGRAM
+  YOUTUBE
+  TIKTOK
+  TWITTER
+}
+
+enum SocialPublishStatus {
+  PENDING
+  PUBLISHED
+  FAILED
+  SKIPPED
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum MediaType {
+  IMAGE
+  AUDIO
+  VIDEO
+}
+
+enum DonationStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+enum ContactMessageStatus {
+  UNREAD
+  READ
+  REPLIED
+  ARCHIVED
+}
+
+model Organisation {
+  id String @id @default(cuid())
+  name String
+  description String?
+  logoUrl String?
+  website String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  churches Church[]
+  users User[]
+}
+
+model Church {
+  id String @id @default(cuid())
+  name String
+  address String?
+  city String?
+  country String @default("CD")
+  phone String?
+  email String?
+  logoUrl String?
+  coverUrl String?
+  foundedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  organisationId String
+  organisation Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+  pastorId String?
+  pastor User? @relation("ChurchPastor", fields: [pastorId], references: [id])
+  departments Department[]
+  members Member[]
+  events Event[]
+  posts Post[]
+  programs Program[]
+  socialAccounts SocialAccount[]
+  users UserChurch[]
+  baptismCourses BaptismCourse[]
+  donations Donation[]
+}
+
+model Department {
+  id String @id @default(cuid())
+  name String
+  description String?
+  color String?
+  iconName String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  churchId String
+  church Church @relation(fields: [churchId], references: [id], onDelete: Cascade)
+  leaderId String?
+  leader User? @relation("DeptLeader", fields: [leaderId], references: [id])
+  members MemberDepartment[]
+  programs Program[]
+}
+
+model User {
+  id String @id @default(cuid())
+  email String @unique
+  password String
+  firstName String
+  lastName String
+  phone String?
+  avatarUrl String?
+  role Role @default(SECRETARY)
+  isActive Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  organisationId String?
+  organisation Organisation? @relation(fields: [organisationId], references: [id])
+  createdById String?
+  createdBy User? @relation("CreatedBy", fields: [createdById], references: [id])
+  createdUsers User[] @relation("CreatedBy")
+  churches UserChurch[]
+  leadingChurches Church[] @relation("ChurchPastor")
+  leadingDepts Department[] @relation("DeptLeader")
+  posts Post[]
+  sessions Session[]
+}
+
+model UserChurch {
+  userId String
+  churchId String
+  role Role @default(SECRETARY)
+  joinedAt DateTime @default(now())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  church Church @relation(fields: [churchId], references: [id], onDelete: Cascade)
+  @@id([userId, churchId])
+}
+
+model Session {
+  id String @id @default(cuid())
+  userId String
+  token String @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Member {
+  id String @id @default(cuid())
+  firstName String
+  lastName String
+  gender Gender?
+  birthDate DateTime?
+  phone String?
+  email String?
+  address String?
+  photoUrl String?
+  joinDate DateTime @default(now())
+  isActive Boolean @default(true)
+  notes String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  churchId String
+  church Church @relation(fields: [churchId], references: [id], onDelete: Cascade)
+  departments MemberDepartment[]
+  baptisms Baptism[]
+  attendances Attendance[]
+  courseEnrollments BaptismCourseEnrollment[]
+}
+
+model MemberDepartment {
+  memberId String
+  departmentId String
+  joinedAt DateTime @default(now())
+  isLeader Boolean @default(false)
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  department Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  @@id([memberId, departmentId])
+}
+
+model Baptism {
+  id String @id @default(cuid())
+  baptismType BaptismType @default(WATER)
+  baptismDate DateTime
+  location String?
+  officiant String?
+  certificateUrl String?
+  certificateNo String? @unique
+  notes String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  memberId String
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+}
+
+model BaptismCourse {
+  id String @id @default(cuid())
+  title String
+  description String?
+  startDate DateTime
+  endDate DateTime?
+  location String?
+  teacherName String?
+  isActive Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  churchId String
+  church Church @relation(fields: [churchId], references: [id], onDelete: Cascade)
+  enrollments BaptismCourseEnrollment[]
+  sessions BaptismCourseSession[]
+}
+
+model BaptismCourseSession {
+  id String @id @default(cuid())
+  title String
+  date DateTime
+  notes String?
+  createdAt DateTime @default(now())
+  courseId String
+  course BaptismCourse @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  attendances BaptismCourseAttendance[]
+}
+
+model BaptismCourseEnrollment {
+  id String @id @default(cuid())
+  status BaptismCourseStatus @default(ONGOING)
+  enrolledAt DateTime @default(now())
+  notes String?
+  memberId String
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  courseId String
+  course BaptismCourse @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  @@unique([memberId, courseId])
+}
+
+model BaptismCourseAttendance {
+  id String @id @default(cuid())
+  isPresent Boolean @default(true)
+  note String?
+  sessionId String
+  session BaptismCourseSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  memberId String
+  @@unique([sessionId, memberId])
+}
+
+model Media {
+  id String @id @default(cuid())
+  url String
+  type MediaType
+  title String?
+  duration Int?
+  size Int?
+  mimeType String?
+  createdAt DateTime @default(now())
+  postId String?
+  post Post? @relation(fields: [postId], references: [id], onDelete: Cascade)
+  eventId String?
+  event Event? @relation(fields: [eventId], references: [id], onDelete: Cascade)
+}
+
+model Post {
+  id String @id @default(cuid())
+  title String
+  slug String @unique
+  excerpt String?
+  content String
+  coverUrl String?
+  audioUrl String?
+  videoUrl String?
+  type PostType @default(ARTICLE)
+  status PostStatus @default(DRAFT)
+  publishedAt DateTime?
+  viewCount Int @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  authorId String
+  author User @relation(fields: [authorId], references: [id])
+  churchId String?
+  church Church? @relation(fields: [churchId], references: [id])
+  tags PostTag[]
+  media Media[]
+  socialPublishes SocialPublishQueue[]
+}
+
+model Tag {
+  id String @id @default(cuid())
+  name String @unique
+  slug String @unique
+  posts PostTag[]
+}
+
+model PostTag {
+  postId String
+  tagId String
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag Tag @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  @@id([postId, tagId])
+}
+
+model Event {
+  id String @id @default(cuid())
+  title String
+  slug String @unique
+  description String?
+  content String?
+  coverUrl String?
+  audioUrl String?
+  videoUrl String?
+  location String?
+  onlineUrl String?
+  startDate DateTime
+  endDate DateTime?
+  isRecurring Boolean @default(false)
+  status EventStatus @default(UPCOMING)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  churchId String
+  church Church @relation(fields: [churchId], references: [id], onDelete: Cascade)
+  attendances Attendance[]
+  media Media[]
+  socialPublishes SocialPublishQueue[]
+}
+
+model Attendance {
+  id String @id @default(cuid())
+  date DateTime @default(now())
+  isPresent Boolean @default(true)
+  note String?
+  memberId String
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  eventId String?
+  event Event? @relation(fields: [eventId], references: [id])
+  @@unique([memberId, eventId, date])
+}
+
+model Program {
+  id String @id @default(cuid())
+  title String
+  description String?
+  dayOfWeek Int?
+  startTime String?
+  endTime String?
+  location String?
+  isActive Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  churchId String
+  church Church @relation(fields: [churchId], references: [id], onDelete: Cascade)
+  departmentId String?
+  department Department? @relation(fields: [departmentId], references: [id])
+}
+
+model SocialAccount {
+  id String @id @default(cuid())
+  platform SocialPlatform
+  accountName String
+  accessToken String
+  refreshToken String?
+  expiresAt DateTime?
+  isActive Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  churchId String
+  church Church @relation(fields: [churchId], references: [id], onDelete: Cascade)
+  @@unique([churchId, platform])
+  publishQueue SocialPublishQueue[]
+}
+
+model SocialPublishQueue {
+  id String @id @default(cuid())
+  content String
+  mediaUrls String[]
+  status SocialPublishStatus @default(PENDING)
+  scheduledAt DateTime?
+  publishedAt DateTime?
+  errorMessage String?
+  createdAt DateTime @default(now())
+  socialAccountId String
+  socialAccount SocialAccount @relation(fields: [socialAccountId], references: [id], onDelete: Cascade)
+  postId String?
+  post Post? @relation(fields: [postId], references: [id])
+  eventId String?
+  event Event? @relation(fields: [eventId], references: [id])
+}
+
+model Donation {
+  id String @id @default(cuid())
+  amount Float
+  currency String @default("USD")
+  donorName String
+  donorEmail String
+  donorPhone String?
+  donorMessage String?
+  purpose String?
+  status DonationStatus @default(PENDING)
+  reference String? @unique
+  paymentMethod String?
+  confirmedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  churchId String
+  church Church @relation(fields: [churchId], references: [id], onDelete: Cascade)
+}
+
+model ContactMessage {
+  id String @id @default(cuid())
+  name String
+  email String
+  subject String?
+  message String
+  status ContactMessageStatus @default(UNREAD)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
