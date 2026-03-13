@@ -48,7 +48,7 @@ export default function BaptismCertificatePage({ params }: { params: { id: strin
         <div className="flex gap-2">
           <a href={`/admin/baptemes/carte/${baptism.id}`} target="_blank" rel="noopener noreferrer"
             className="flex items-center gap-2 px-4 py-2.5 border border-brand-200 text-brand-700 hover:bg-brand-50 rounded-lg text-sm font-bold transition-colors">
-            🎓 Carte de baptême
+            <span className="inline-flex items-center gap-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>Carte de baptême</span>
           </a>
           <button onClick={handlePrint} disabled={printing}
             className="flex items-center gap-2 px-5 py-2.5 bg-brand-600 text-white rounded-lg text-sm font-bold hover:bg-brand-700 transition-all shadow-sm disabled:opacity-50">

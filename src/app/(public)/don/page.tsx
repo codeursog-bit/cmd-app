@@ -50,12 +50,12 @@ export default function DonPage() {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-gradient-to-b from-brand-950 to-brand-900 text-white py-20 px-4">
+      <section className="bg-gradient-to-b from-brand-950 to-brand-900 text-white pt-32 pb-20 px-4">
         <div className="max-w-2xl mx-auto text-center">
           <p className="text-brand-300 text-sm font-bold uppercase tracking-widest mb-3">Donner</p>
           <h1 className="font-display text-5xl font-bold mb-4">Faire un don</h1>
           <p className="text-brand-200 text-lg leading-relaxed">
-            Votre générosité soutient la mission de CMDG — l&apos;évangélisation et l&apos;action sociale.
+            Votre générosité soutient la mission de CMD — l&apos;évangélisation et l&apos;action sociale.
           </p>
         </div>
       </section>

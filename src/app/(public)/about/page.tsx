@@ -37,7 +37,7 @@ export default function AboutPage() {
                 </p>
               </div>
               <div className="bg-neutral-100 aspect-video flex items-center justify-center border border-neutral-200">
-                <span className="text-neutral-400 italic text-sm">[Photo: Fondateurs de la CMDG]</span>
+                <span className="text-neutral-400 italic text-sm">[Photo: Fondateurs de la CMD]</span>
               </div>
             </div>
           </div>

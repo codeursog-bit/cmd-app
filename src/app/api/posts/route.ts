@@ -4,6 +4,8 @@ import { getSession, requireAuth } from '@/lib/auth'
 import { ok, created, error, serverError } from '@/lib/api'
 import { uniqueSlug } from '@/lib/slugify'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url)

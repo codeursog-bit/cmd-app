@@ -2,6 +2,8 @@ import { prisma } from '@/lib/prisma'
 import { getSession } from '@/lib/auth'
 import { ok, serverError } from '@/lib/api'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   try {
     const session = await getSession()

@@ -25,13 +25,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const images = event.coverUrl ? [{ url: event.coverUrl, width: 1200, height: 630, alt: event.title }] : []
 
   return {
-    title: `${event.title} — CMDG`,
+    title: `${event.title} — CMD`,
     description,
     openGraph: {
       title: event.title,
       description,
       url: `${appUrl}/evenements/${slug}`,
-      siteName: 'CMDG — Communauté des Messagers de Dieu',
+      siteName: 'CMD — Communauté des Messagers de Dieu',
       images,
       type: 'website',
     },

@@ -20,17 +20,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!post) return { title: 'Article introuvable' }
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://cmdg.org'
-  const description = post.excerpt || `Lisez "${post.title}" sur CMDG.`
+  const description = post.excerpt || `Lisez "${post.title}" sur CMD.`
   const images = post.coverUrl ? [{ url: post.coverUrl, width: 1200, height: 630, alt: post.title }] : []
 
   return {
-    title: `${post.title} — CMDG`,
+    title: `${post.title} — CMD`,
     description,
     openGraph: {
       title: post.title,
       description,
       url: `${appUrl}/blog/${slug}`,
-      siteName: 'CMDG — Communauté des Messagers de Dieu',
+      siteName: 'CMD — Communauté des Messagers de Dieu',
       images,
       type: 'article',
       publishedTime: post.publishedAt?.toISOString(),
@@ -217,7 +217,7 @@ export default async function BlogSlugPage({ params }: Props) {
               </div>
               <div>
                 <p className="font-bold text-neutral-900">{post.author.firstName} {post.author.lastName}</p>
-                <p className="text-sm text-neutral-500">{post.church?.name || 'CMDG'}</p>
+                <p className="text-sm text-neutral-500">{post.church?.name || 'CMD'}</p>
               </div>
             </div>
           </div>

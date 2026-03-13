@@ -41,13 +41,18 @@ export function MediaUpload({ coverUrl, onCoverChange, audioUrl, onAudioChange, 
     try {
       const fd = new FormData()
       fd.append('file', file)
-      fd.append('upload_preset', 'cmdg_unsigned')
+      fd.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || 'cmd-upload')
       fd.append('folder', 'cmdg')
       const resource = tab === 'image' ? 'image' : tab === 'audio' ? 'video' : 'video'
       const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/${resource}/upload`, { method: 'POST', body: fd })
       const data = await res.json()
       if (data.secure_url) setUrl(data.secure_url)
-      else setError('Erreur Cloudinary')
+      else if (res.status === 400) {
+        // Preset non configuré — fallback local
+        const reader = new FileReader()
+        reader.onload = (e) => { setUrl(e.target?.result as string); setError('⚠️ Cloudinary non configuré — aperçu local') }
+        reader.readAsDataURL(file)
+      } else setError('Erreur Cloudinary : ' + (data.error?.message || 'inconnu'))
     } catch { setError('Erreur réseau') }
     finally { setUpl(false) }
   }

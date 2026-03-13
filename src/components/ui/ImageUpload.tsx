@@ -30,7 +30,7 @@ export function ImageUpload({ value, onChange, label = 'Image de couverture', pl
     try {
       const formData = new FormData()
       formData.append('file', file)
-      formData.append('upload_preset', 'cmdg_unsigned') // preset non signé à créer dans Cloudinary
+      formData.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || 'cmd-upload')
       formData.append('folder', 'cmdg')
 
       const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
@@ -40,8 +40,13 @@ export function ImageUpload({ value, onChange, label = 'Image de couverture', pl
       const data = await res.json()
       if (data.secure_url) {
         onChange(data.secure_url)
+      } else if (res.status === 400) {
+        // Preset Cloudinary non configuré — fallback preview local
+        const reader = new FileReader()
+        reader.onload = (e) => { onChange(e.target?.result as string); setError('⚠️ Cloudinary non configuré — aperçu local uniquement') }
+        reader.readAsDataURL(file)
       } else {
-        setError('Erreur upload Cloudinary')
+        setError('Erreur upload : ' + (data.error?.message || 'inconnu'))
       }
     } catch {
       setError('Erreur réseau lors de l\'upload')

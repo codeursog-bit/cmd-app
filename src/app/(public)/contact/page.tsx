@@ -110,16 +110,14 @@ export default function ContactPage() {
     <div className="min-h-screen bg-white font-sans text-neutral-950 selection:bg-brand-600 selection:text-white">
       <main className="flex flex-col lg:flex-row">
         {/* LEFT PANEL */}
-        <section className="flex flex-col justify-between bg-brand-950 p-12 text-white lg:min-h-screen lg:w-[40%] lg:p-24 border-r border-brand-900">
+        <section className="flex flex-col justify-between bg-brand-950 p-12 pt-32 text-white lg:min-h-screen lg:w-[40%] lg:p-24 lg:pt-32 border-r border-brand-900">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
           >
             {/* Logo Placeholder */}
-            <div className="flex h-20 w-20 items-center justify-center border border-brand-800 text-brand-400">
-              <IconCross />
-            </div>
+            <img src="/logo-cmd.png" alt="CMD" className="h-20 w-20 object-contain" />
 
             <h1 className="mt-12 font-display text-4xl font-bold leading-tight md:text-6xl">
               Communauté <br />
@@ -181,7 +179,7 @@ export default function ContactPage() {
         </section>
 
         {/* RIGHT PANEL */}
-        <section className="relative flex flex-col bg-white p-12 lg:w-[60%] lg:p-32">
+        <section className="relative flex flex-col bg-white p-12 pt-24 lg:w-[60%] lg:p-32 lg:pt-32">
           <AnimatePresence mode="wait">
             {status === "success" ? (
               <motion.div
@@ -340,12 +338,6 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="bg-brand-950 py-16 text-center border-t border-brand-900">
-        <p className="text-[10px] font-bold tracking-[0.3em] uppercase text-brand-700">
-          © {new Date().getFullYear()} Communauté des Messagers de Dieu.
-        </p>
-      </footer>
     </div>
   );
 }

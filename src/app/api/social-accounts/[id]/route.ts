@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma'
 import { requireAuth } from '@/lib/auth'
 import { ok, noContent, serverError } from '@/lib/api'
 
+export const dynamic = 'force-dynamic'
+
 type Ctx = { params: { id: string } }
 
 export async function PATCH(req: NextRequest, { params }: Ctx) {

@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma'
 import { requireAuth } from '@/lib/auth'
 import { ok, created, error, serverError, parsePagination } from '@/lib/api'
 
+export const dynamic = 'force-dynamic'
+
 // GET /api/members?churchId=&search=&dept=&status=&gender=&page=&limit=
 export async function GET(req: NextRequest) {
   try {

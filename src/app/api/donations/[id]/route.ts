@@ -2,6 +2,8 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSession } from '@/lib/auth'
 import { ok, error, serverError } from '@/lib/api'
+
+export const dynamic = 'force-dynamic'
 type Ctx = { params: { id: string } }
 
 export async function PATCH(req: NextRequest, { params }: Ctx) {

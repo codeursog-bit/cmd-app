@@ -2,6 +2,8 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireAuth } from '@/lib/auth'
 import { ok, created, error, serverError } from '@/lib/api'
+
+export const dynamic = 'force-dynamic'
 type Ctx = { params: { id: string } }
 export async function GET(_: NextRequest, { params }: Ctx) {
   try {

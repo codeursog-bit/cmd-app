@@ -34,8 +34,8 @@ export default function LoginPage() {
       <section className="relative hidden w-[40%] flex-col items-center justify-center overflow-hidden bg-brand-950 lg:flex border-r border-brand-900">
         <div className="absolute inset-0 opacity-5" style={{backgroundImage:`linear-gradient(45deg,#2563eb 25%,transparent 25%),linear-gradient(-45deg,#2563eb 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#2563eb 75%),linear-gradient(-45deg,transparent 75%,#2563eb 75%)`,backgroundSize:'60px 60px'}}/>
         <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{duration:0.8,ease:'easeOut'}} className="relative z-10 flex flex-col items-center text-center px-12">
-          <div className="text-brand-400 border border-brand-800 p-6"><IconCross /></div>
-          <h1 className="mt-12 font-display text-6xl font-bold tracking-[0.2em] text-white">CMDG</h1>
+          <img src="/logo-cmd.png" alt="CMD" className="h-24 w-24 object-contain" />
+          <h1 className="mt-12 font-display text-6xl font-bold tracking-[0.2em] text-white">CMD</h1>
           <div className="mt-10 h-[1px] w-20 bg-brand-600"/>
           <p className="mt-10 text-[10px] font-bold tracking-[0.4em] uppercase text-brand-300">Administration</p>
           <p className="mt-6 text-sm font-light text-neutral-400 leading-relaxed max-w-xs">Espace sécurisé pour la gestion du ministère et de la communauté.</p>
@@ -83,7 +83,7 @@ export default function LoginPage() {
             </div>
           </div>
           <footer className="mt-20">
-            <p className="text-[10px] font-bold tracking-[0.3em] uppercase text-neutral-300 text-center">Espace réservé • CMDG Administration</p>
+            <p className="text-[10px] font-bold tracking-[0.3em] uppercase text-neutral-300 text-center">Espace réservé • CMD Administration</p>
           </footer>
         </motion.div>
       </section>

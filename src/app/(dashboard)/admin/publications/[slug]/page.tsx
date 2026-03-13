@@ -84,6 +84,8 @@ export default function PublicationEditPage({ params }: { params: { slug: string
   const [error, setError]     = useState<string | null>(null)
   const [saved, setSaved]     = useState(false)
   const [shareOpen, setShare] = useState(false)
+  const [sendingNewsletter, setSendingNewsletter] = useState(false)
+  const [newsletterResult, setNewsletterResult] = useState<string | null>(null)
 
   const [title, setTitle]     = useState('')
   const [excerpt, setExcerpt] = useState('')
@@ -92,6 +94,24 @@ export default function PublicationEditPage({ params }: { params: { slug: string
   const [type, setType]       = useState('ARTICLE')
   const [status, setStatus]   = useState('DRAFT')
   const [tags, setTags]       = useState('')
+
+  const sendNewsletter = async () => {
+    if (!post) return
+    if (!confirm(`Envoyer "${post.title}" à tous les abonnés newsletter ?`)) return
+    setSendingNewsletter(true)
+    setNewsletterResult(null)
+    try {
+      const res = await fetch('/api/newsletter/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ postSlug: post.slug }),
+      })
+      const data = await res.json()
+      if (data.success) setNewsletterResult(`✓ Envoyé à ${data.data.sent} abonné(s)`)
+      else setNewsletterResult('✗ ' + (data.error || 'Erreur'))
+    } catch { setNewsletterResult('✗ Erreur réseau') }
+    finally { setSendingNewsletter(false) }
+  }
 
   useEffect(() => {
     if (post) {
@@ -154,14 +174,27 @@ export default function PublicationEditPage({ params }: { params: { slug: string
             </span>
             <span className="text-xs text-neutral-400">{post.viewCount} vues</span>
             {post.status === 'PUBLISHED' && (
-              <button onClick={() => setShare(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg text-sm font-bold transition-colors">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
-                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
-                </svg>
-                Partager
-              </button>
+              <>
+                <button onClick={() => setShare(true)}
+                  className="flex items-center gap-2 px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg text-sm font-bold transition-colors">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                  </svg>
+                  Partager
+                </button>
+                <button onClick={sendNewsletter} disabled={sendingNewsletter}
+                  className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded-lg text-sm font-bold transition-colors">
+                  {sendingNewsletter ? (
+                    <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                    </svg>
+                  )}
+                  Envoyer newsletter
+                </button>
+              </>
             )}
             <button onClick={handleDelete} className="px-4 py-2 bg-red-50 border border-red-100 rounded-lg text-sm font-bold text-red-600 hover:bg-red-100 transition-colors">
               Supprimer
@@ -170,6 +203,11 @@ export default function PublicationEditPage({ params }: { params: { slug: string
         </div>
 
         {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">{error}</div>}
+        {newsletterResult && (
+          <div className={`px-4 py-3 rounded-xl text-sm font-bold ${newsletterResult.startsWith('✓') ? 'bg-emerald-50 border border-emerald-200 text-emerald-700' : 'bg-red-50 border border-red-200 text-red-700'}`}>
+            {newsletterResult}
+          </div>
+        )}
         {saved  && <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 rounded-xl text-sm font-bold">✓ Publication mise à jour</div>}
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_260px] gap-6">

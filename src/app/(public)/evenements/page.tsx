@@ -21,7 +21,7 @@ export default function EventsPage() {
 
   return (
     <div className="min-h-screen bg-white font-sans text-neutral-950 selection:bg-brand-600 selection:text-white">
-      <header className="relative flex h-[350px] w-full flex-col justify-center bg-brand-950 px-6 md:px-12">
+      <header className="relative flex h-[350px] w-full flex-col justify-center bg-brand-950 px-6 md:px-12 pt-20">
         <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{duration:0.6}} className="mx-auto w-full max-w-7xl">
           <nav className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-brand-400">
             <a href="/" className="hover:text-white transition-colors">Accueil</a>

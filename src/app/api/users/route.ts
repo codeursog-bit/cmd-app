@@ -4,6 +4,8 @@ import { requireAuth } from '@/lib/auth'
 import { ok, created, error, forbidden, serverError } from '@/lib/api'
 import { hashPassword } from '@/lib/auth'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(req: NextRequest) {
   try {
     const session = await requireAuth()

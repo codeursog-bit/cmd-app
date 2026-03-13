@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma'
 import { requireAuth } from '@/lib/auth'
 import { ok, noContent, notFound, forbidden, serverError } from '@/lib/api'
 
+export const dynamic = 'force-dynamic'
+
 type Ctx = { params: { id: string } }
 
 export async function GET(_: NextRequest, { params }: Ctx) {

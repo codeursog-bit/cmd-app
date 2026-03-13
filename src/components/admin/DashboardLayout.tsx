@@ -97,9 +97,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <aside className={`fixed inset-y-0 left-0 w-[260px] bg-brand-950 flex flex-col z-50 transition-transform duration-300 lg:translate-x-0 lg:static ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="p-6 border-b border-brand-900">
           <div className="flex items-center gap-3 mb-6">
-            <div className="text-brand-400"><IconCross /></div>
+            <img src="/logo-cmd.png" alt="CMD" className="h-10 w-10 object-contain" />
             <div>
-              <h1 className="font-display text-2xl font-bold text-white leading-none">CMDG</h1>
+              <h1 className="font-display text-2xl font-bold text-white leading-none">CMD</h1>
               <span className="text-brand-400 text-[10px] font-bold uppercase tracking-widest">Administration</span>
             </div>
           </div>

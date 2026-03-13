@@ -7,7 +7,7 @@ interface DonationsData { donations: Donation[]; total: number; stats: { total: 
 
 const STATUS_COLORS: Record<string, string> = { PENDING: 'bg-amber-50 text-amber-700 border-amber-200', CONFIRMED: 'bg-emerald-50 text-emerald-700 border-emerald-200', CANCELLED: 'bg-red-50 text-red-500 border-red-100' }
 const STATUS_FR: Record<string, string> = { PENDING: 'En attente', CONFIRMED: 'Confirmé', CANCELLED: 'Annulé' }
-const METHOD_FR: Record<string, string> = { mobile_money: '📱 Mobile Money', virement: '🏦 Virement', especes: '💵 Espèces' }
+const METHOD_FR: Record<string, string> = { mobile_money: 'Mobile Money', virement: 'Virement', especes: 'Espèces' }
 
 export default function DonsPage() {
   const [filter, setFilter]     = useState('')

@@ -4,6 +4,8 @@ import { requireAuth } from '@/lib/auth'
 import { ok, created, error, serverError, parsePagination } from '@/lib/api'
 import { certNumber } from '@/lib/slugify'
 
+export const dynamic = 'force-dynamic'
+
 // GET /api/baptisms?churchId=&type=&search=&page=
 export async function GET(req: NextRequest) {
   try {
