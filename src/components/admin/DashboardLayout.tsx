@@ -18,6 +18,7 @@ const IconUsers = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="n
 const IconCourses = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v10"/><path d="m16 8-4 4-4-4"/><path d="M20 19a8 8 0 0 0-16 0"/></svg>)
 const IconDons = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>)
 const IconMessages = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>)
+const IconNewsletter = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.36 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.29 6.29l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>)
 const IconSocial = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>)
 const IconSettings = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>)
 const IconLock = () => (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>)
@@ -53,6 +54,8 @@ const NavGroup = ({ label, children }: { label: string; children: React.ReactNod
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [pendingDons, setPendingDons] = useState(0)
+  const [unreadMessages, setUnreadMessages] = useState(0)
+  const [newSubscribers, setNewSubscribers] = useState(0)
   const pathname = usePathname()
   const { user, logout } = useAuth()
 
@@ -72,7 +75,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }
   const roleLabel = ROLE_LABELS[user?.role || ''] || 'Admin'
 
-  // Badge dons en attente — visible seulement pour berger et pasteur
+  // Badge dons en attente
   const fetchPending = useCallback(async () => {
     if (!canSeeDons) return
     try {
@@ -82,12 +85,27 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     } catch { /* silencieux */ }
   }, [canSeeDons])
 
+  // Badge messages non lus + abonnés newsletter
+  const fetchNotifs = useCallback(async () => {
+    if (!isSuperAdmin && !isPastor) return
+    try {
+      const [msgRes, subRes] = await Promise.all([
+        fetch('/api/contact?status=UNREAD&limit=1'),
+        fetch('/api/newsletter'),
+      ])
+      const msgJson = await msgRes.json()
+      const subJson = await subRes.json()
+      setUnreadMessages(msgJson.data?.unreadCount ?? 0)
+      setNewSubscribers(subJson.data?.total ?? 0)
+    } catch { /* silencieux */ }
+  }, [isSuperAdmin, isPastor])
+
   useEffect(() => {
     fetchPending()
-    // Rafraîchit toutes les 60 secondes
-    const interval = setInterval(fetchPending, 60_000)
+    fetchNotifs()
+    const interval = setInterval(() => { fetchPending(); fetchNotifs() }, 60_000)
     return () => clearInterval(interval)
-  }, [fetchPending])
+  }, [fetchPending, fetchNotifs])
 
   return (
     <div className="flex h-screen bg-neutral-50 font-sans text-neutral-900 overflow-hidden">
@@ -161,7 +179,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           {/* PARAMÈTRES */}
           {(isSuperAdmin || isPastor) && (
             <NavGroup label="PARAMÈTRES">
-              <NavItem to="/admin/messages" icon={<IconMessages />} label="Messages" active={isActive('/admin/messages')} />
+              <NavItem to="/admin/messages" icon={<IconMessages />} label="Messages" active={isActive('/admin/messages')} badge={unreadMessages} />
+              <NavItem to="/admin/newsletter" icon={<IconNewsletter />} label="Newsletter" active={isActive('/admin/newsletter')} badge={newSubscribers} />
               <NavItem to="/admin/reseaux-sociaux" icon={<IconSocial />} label="Réseaux Sociaux" active={isActive('/admin/reseaux-sociaux')} />
               <NavItem to="/admin/parametres" icon={<IconSettings />} label="Paramètres" active={isActive('/admin/parametres')} />
             </NavGroup>
