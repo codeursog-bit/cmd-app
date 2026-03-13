@@ -48,7 +48,8 @@ export default function BaptismCertificatePage({ params }: { params: { id: strin
         <div className="flex gap-2">
           <a href={`/admin/baptemes/carte/${baptism.id}`} target="_blank" rel="noopener noreferrer"
             className="flex items-center gap-2 px-4 py-2.5 border border-brand-200 text-brand-700 hover:bg-brand-50 rounded-lg text-sm font-bold transition-colors">
-            <span className="inline-flex items-center gap-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>Carte de baptême</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            Carte de baptême
           </a>
           <button onClick={handlePrint} disabled={printing}
             className="flex items-center gap-2 px-5 py-2.5 bg-brand-600 text-white rounded-lg text-sm font-bold hover:bg-brand-700 transition-all shadow-sm disabled:opacity-50">
@@ -67,9 +68,8 @@ export default function BaptismCertificatePage({ params }: { params: { id: strin
         <div className="absolute bottom-0 right-0 w-20 h-20 border-b-4 border-r-4 border-brand-400" />
 
         <div className="text-center mb-10">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="mx-auto text-brand-600 mb-4">
-            <path d="M12 2v20M7 7h10" />
-          </svg>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo-cmd.png" alt="CMD" className="w-20 h-20 object-contain mx-auto mb-4" />
           <p className="font-sans text-[10px] font-bold tracking-[0.4em] uppercase text-brand-500">Communauté des Messagers de Dieu</p>
           <h1 className="font-display text-5xl font-bold text-brand-950 mt-3 leading-tight">Certificat de<br /><span className="italic font-light text-brand-600">{typeLabel}</span></h1>
           <div className="w-24 h-[2px] bg-brand-600 mx-auto mt-5" />
