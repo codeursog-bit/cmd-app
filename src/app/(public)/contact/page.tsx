@@ -140,9 +140,9 @@ export default function ContactPage() {
             <div className="mt-24 space-y-12">
               {[
                 { icon: <IconPin />, label: "Adresse", value: "Avenue de la Paix, Pointe-Noire, République du Congo" },
-                { icon: <IconPhone />, label: "Téléphone", value: "+243 XXX XXX XXX" },
+                { icon: <IconPhone />, label: "Téléphone", value: "+242 06 000 00 00" },
                 { icon: <IconMail />, label: "Email", value: "contact@messagersdedieu.org" },
-                { icon: <IconClock />, label: "Horaires", value: "Dim 9h-13h | Mar & Jeu 18h-20h" },
+                { icon: <IconClock />, label: "Horaires", value: "Dim 8h-1h | Lun & Ven 17h-20h" },
               ].map((item, idx) => (
                 <motion.div
                   key={idx}
@@ -278,7 +278,7 @@ export default function ContactPage() {
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                         className="w-full border-b border-neutral-200 py-4 text-sm outline-none transition-all focus:border-brand-600 bg-transparent"
-                        placeholder="+243 ..."
+                        placeholder="+242 ..."
                       />
                     </div>
                   </div>

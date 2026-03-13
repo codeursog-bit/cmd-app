@@ -81,7 +81,7 @@ export default function DonPage() {
                 {method === 'mobile_money' && (
                   <div className="text-sm text-amber-700 space-y-1">
                     <p>📱 Envoyez <strong>{amount} {currency}</strong> au numéro :</p>
-                    <p className="font-mono text-lg font-bold">+243 XX XXX XXXX</p>
+                    <p className="font-mono text-lg font-bold">+242 06 000 00 00</p>
                     <p>Mentionnez la référence <strong>{ref}</strong> en note.</p>
                   </div>
                 )}
@@ -196,7 +196,7 @@ export default function DonPage() {
                     {[
                       { label: 'Nom complet *', value: name, set: setName, type: 'text', placeholder: 'Jean Dupont' },
                       { label: 'Email *', value: email, set: setEmail, type: 'email', placeholder: 'jean@exemple.com' },
-                      { label: 'Téléphone', value: phone, set: setPhone, type: 'tel', placeholder: '+243 XXX XXX XXX' },
+                      { label: 'Téléphone', value: phone, set: setPhone, type: 'tel', placeholder: '+242 06 000 00 00' },
                     ].map(f => (
                       <div key={f.label}>
                         <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-500 mb-1">{f.label}</label>
