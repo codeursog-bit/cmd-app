@@ -122,7 +122,7 @@ export default function EglisesPage() {
             <h2 className="font-sans text-xl font-bold text-neutral-900 mb-6">{editing ? "Modifier l'église" : 'Nouvelle église'}</h2>
             {error && <div className="mb-4 bg-red-50 text-red-700 border border-red-100 px-4 py-2 rounded-lg text-sm">{error}</div>}
             <div className="space-y-4">
-              {[['Nom', name, setName, true, 'Temple de la Grâce'],['Ville', city, setCity, false, 'Kinshasa'],['Téléphone', phone, setPhone, false, '+243 8x xxx xxxx'],['Email', email, setEmail, false, 'contact@eglise.org']].map(([l,v,fn,req,ph]) => (
+              {[['Nom', name, setName, true, 'Temple de la Grâce'],['Ville', city, setCity, false, 'Pointe-Noire'],['Téléphone', phone, setPhone, false, '+242 06 xxx xxxx'],['Email', email, setEmail, false, 'contact@eglise.org']].map(([l,v,fn,req,ph]) => (
                 <div key={l as string}>
                   <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-500 mb-1">{l as string}{req ? <span className="text-red-400 ml-1">*</span> : ''}</label>
                   <input type="text" value={v as string} onChange={e => (fn as Function)(e.target.value)}

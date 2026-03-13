@@ -5,6 +5,18 @@ import { apiFetch } from '@/hooks/useApi'
 
 const tabs = ['Profil','Sécurité','Mon Église']
 
+async function uploadToCloudinary(file: File): Promise<string> {
+  const formData = new FormData()
+  formData.append('file', file)
+  formData.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!)
+  const res = await fetch(
+    `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+    { method: 'POST', body: formData }
+  )
+  const data = await res.json()
+  return data.secure_url
+}
+
 export default function ParametresPage() {
   const { user } = useAuth()
   const [tab, setTab] = useState('Profil')
@@ -23,8 +35,31 @@ export default function ParametresPage() {
   const [confirmPwd, setConfirmPwd]   = useState('')
   const [showPwd, setShowPwd]         = useState(false)
 
+  // Mon Église
+  const [churchName, setChurchName]       = useState('')
+  const [churchAddress, setChurchAddress] = useState('')
+  const [churchCity, setChurchCity]       = useState('')
+  const [churchPhone, setChurchPhone]     = useState('')
+  const [churchEmail, setChurchEmail]     = useState('')
+  const [logoUrl, setLogoUrl]             = useState('')
+  const [coverUrl, setCoverUrl]           = useState('')
+  const [uploadingLogo, setUploadingLogo]   = useState(false)
+  const [uploadingCover, setUploadingCover] = useState(false)
+
   useEffect(() => {
-    if (user) { setFirstName(user.firstName); setLastName(user.lastName) }
+    if (user) {
+      setFirstName(user.firstName)
+      setLastName(user.lastName)
+    }
+    if (user?.church) {
+      setChurchName(user.church.name || '')
+      setChurchAddress((user.church as any).address || '')
+      setChurchCity((user.church as any).city || '')
+      setChurchPhone((user.church as any).phone || '')
+      setChurchEmail((user.church as any).email || '')
+      setLogoUrl((user.church as any).logoUrl || '')
+      setCoverUrl((user.church as any).coverUrl || '')
+    }
   }, [user])
 
   const handleSaveProfile = async () => {
@@ -48,6 +83,40 @@ export default function ParametresPage() {
     setSaved(true); setTimeout(() => setSaved(false), 3000)
   }
 
+  const handleSaveChurch = async () => {
+    if (!user?.church?.id) return
+    setSaving(true); setError(null)
+    const { error: err } = await apiFetch(`/api/churches/${user.church.id}`, 'PATCH', {
+      name: churchName, address: churchAddress, city: churchCity,
+      phone: churchPhone, email: churchEmail, logoUrl, coverUrl
+    })
+    setSaving(false)
+    if (err) { setError(err); return }
+    setSaved(true); setTimeout(() => setSaved(false), 3000)
+  }
+
+  const handleUploadLogo = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploadingLogo(true); setError(null)
+    try {
+      const url = await uploadToCloudinary(file)
+      setLogoUrl(url)
+    } catch { setError('Erreur upload logo') }
+    setUploadingLogo(false)
+  }
+
+  const handleUploadCover = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploadingCover(true); setError(null)
+    try {
+      const url = await uploadToCloudinary(file)
+      setCoverUrl(url)
+    } catch { setError('Erreur upload image de couverture') }
+    setUploadingCover(false)
+  }
+
   const initials = user ? `${user.firstName?.[0]}${user.lastName?.[0]}` : 'JD'
   const roleLabel = { SUPER_ADMIN:'Berger Principal', PASTOR:'Pasteur', DEPT_LEADER:'Responsable de Département', SECRETARY:'Secrétaire' }[user?.role||''] || 'Admin'
 
@@ -58,6 +127,8 @@ export default function ParametresPage() {
         className="w-full border border-neutral-200 rounded-lg px-4 h-11 text-sm focus:outline-none focus:border-brand-500 transition-colors disabled:bg-neutral-50 disabled:text-neutral-400"/>
     </div>
   )
+
+  const canEditChurch = user?.role === 'SUPER_ADMIN' || user?.role === 'PASTOR'
 
   return (
     <div className="space-y-8 animate-fade-in max-w-4xl">
@@ -86,7 +157,6 @@ export default function ParametresPage() {
           {tab === 'Profil' && (
             <div className="space-y-6">
               <h2 className="font-bold text-neutral-900 text-lg">Informations personnelles</h2>
-              {/* Avatar */}
               <div className="flex items-center gap-5 pb-6 border-b border-neutral-100">
                 <div className="w-20 h-20 rounded-2xl bg-brand-950 flex items-center justify-center shadow-sm">
                   <span className="font-display text-3xl font-bold text-brand-300">{initials}</span>
@@ -139,7 +209,6 @@ export default function ParametresPage() {
               <button onClick={handleSavePassword} disabled={saving||!newPwd||!confirmPwd} className="px-6 py-2.5 bg-brand-600 text-white rounded-xl text-sm font-bold hover:bg-brand-700 transition-colors disabled:opacity-50">
                 {saving ? 'Mise à jour...' : 'Mettre à jour le mot de passe'}
               </button>
-
               <div className="pt-6 border-t border-neutral-100">
                 <h3 className="font-bold text-red-600 text-sm mb-2">Zone de danger</h3>
                 <p className="text-xs text-neutral-500 mb-3">La désactivation de votre compte est irréversible sans l&apos;intervention d&apos;un administrateur.</p>
@@ -158,7 +227,72 @@ export default function ParametresPage() {
                     <p className="font-bold text-brand-800 text-lg">{user.church.name}</p>
                     <p className="text-sm text-brand-500 font-medium">{roleLabel}</p>
                   </div>
-                  <p className="text-sm text-neutral-500">Pour modifier les informations de l&apos;église (adresse, logo, horaires), contactez un administrateur ou accédez à la page <strong>Gestion des Églises</strong>.</p>
+
+                  {canEditChurch ? (
+                    <>
+                      {/* Logo */}
+                      <div>
+                        <label className="block font-sans text-[10px] uppercase tracking-widest text-neutral-500 font-bold mb-2">Logo de l&apos;église</label>
+                        <div className="flex items-center gap-4">
+                          <div className="w-16 h-16 rounded-xl border border-neutral-200 bg-neutral-50 flex items-center justify-center overflow-hidden">
+                            {logoUrl
+                              ? <img src={logoUrl} alt="logo" className="w-full h-full object-cover"/>
+                              : <span className="text-neutral-300 text-xs text-center">Aucun logo</span>
+                            }
+                          </div>
+                          <label className={`px-4 py-2 border border-neutral-200 rounded-xl text-sm font-bold cursor-pointer hover:bg-neutral-50 transition-colors ${uploadingLogo ? 'opacity-50 pointer-events-none' : ''}`}>
+                            {uploadingLogo ? 'Upload...' : 'Choisir un logo'}
+                            <input type="file" accept="image/*" className="hidden" onChange={handleUploadLogo}/>
+                          </label>
+                          {logoUrl && (
+                            <button onClick={() => setLogoUrl('')} className="text-xs text-red-400 hover:text-red-600">Supprimer</button>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Cover */}
+                      <div>
+                        <label className="block font-sans text-[10px] uppercase tracking-widest text-neutral-500 font-bold mb-2">Image de couverture</label>
+                        <div className="space-y-2">
+                          {coverUrl && (
+                            <div className="w-full h-32 rounded-xl overflow-hidden border border-neutral-200">
+                              <img src={coverUrl} alt="cover" className="w-full h-full object-cover"/>
+                            </div>
+                          )}
+                          <div className="flex items-center gap-3">
+                            <label className={`px-4 py-2 border border-neutral-200 rounded-xl text-sm font-bold cursor-pointer hover:bg-neutral-50 transition-colors ${uploadingCover ? 'opacity-50 pointer-events-none' : ''}`}>
+                              {uploadingCover ? 'Upload...' : coverUrl ? 'Changer la couverture' : 'Choisir une image'}
+                              <input type="file" accept="image/*" className="hidden" onChange={handleUploadCover}/>
+                            </label>
+                            {coverUrl && (
+                              <button onClick={() => setCoverUrl('')} className="text-xs text-red-400 hover:text-red-600">Supprimer</button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="border-t border-neutral-100 pt-4 grid grid-cols-2 gap-5">
+                        <div className="col-span-2">
+                          <Field label="Nom de l'église" value={churchName} onChange={setChurchName}/>
+                        </div>
+                        <Field label="Ville" value={churchCity} onChange={setChurchCity} placeholder="Pointe-Noire"/>
+                        <Field label="Téléphone" value={churchPhone} onChange={setChurchPhone} placeholder="+242 06 000 0000"/>
+                        <div className="col-span-2">
+                          <Field label="Email" type="email" value={churchEmail} onChange={setChurchEmail} placeholder="contact@eglise.org"/>
+                        </div>
+                        <div className="col-span-2">
+                          <Field label="Adresse" value={churchAddress} onChange={setChurchAddress} placeholder="Avenue de la Paix, Pointe-Noire"/>
+                        </div>
+                      </div>
+
+                      <button onClick={handleSaveChurch} disabled={saving || uploadingLogo || uploadingCover}
+                        className="px-6 py-2.5 bg-brand-600 text-white rounded-xl text-sm font-bold hover:bg-brand-700 transition-colors disabled:opacity-50">
+                        {saving ? 'Enregistrement...' : 'Sauvegarder l\'église'}
+                      </button>
+                    </>
+                  ) : (
+                    <p className="text-sm text-neutral-500">Pour modifier les informations de l&apos;église, contactez un administrateur ou un pasteur.</p>
+                  )}
                 </>
               ) : (
                 <p className="text-neutral-400 italic text-sm">Aucune église associée à votre compte.</p>

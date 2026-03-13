@@ -115,7 +115,7 @@ export default function BaptismsPage() {
                     <td className="px-6 py-4 text-sm text-neutral-500 max-w-32 truncate">{b.location||'—'}</td>
                     <td className="px-6 py-4 text-xs font-mono text-neutral-400">{b.certificateNo||'—'}</td>
                     <td className="px-6 py-4 text-right">
-                      <Link href={`/baptemes/${b.id}`} className="text-xs font-bold text-brand-600 hover:underline">Certificat</Link>
+                      <a href={`/admin/baptemes/carte/${b.id}`} target="_blank" rel="noopener noreferrer" className="text-xs font-bold text-brand-600 hover:underline">Certificat</a>
                     </td>
                   </tr>
                 ))

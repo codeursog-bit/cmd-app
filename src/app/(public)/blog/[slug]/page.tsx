@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   })
   if (!post) return { title: 'Article introuvable' }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://cmdg.org'
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://cmd.cg'
   const description = post.excerpt || `Lisez "${post.title}" sur CMD.`
   const images = post.coverUrl ? [{ url: post.coverUrl, width: 1200, height: 630, alt: post.title }] : []
 

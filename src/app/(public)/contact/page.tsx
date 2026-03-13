@@ -130,7 +130,7 @@ export default function ContactPage() {
             {/* Contact Cards */}
             <div className="mt-24 space-y-12">
               {[
-                { icon: <IconPin />, label: "Adresse", value: "Avenue de l'Église, Kinshasa, RDC" },
+                { icon: <IconPin />, label: "Adresse", value: "Avenue de la Paix, Pointe-Noire, République du Congo" },
                 { icon: <IconPhone />, label: "Téléphone", value: "+243 XXX XXX XXX" },
                 { icon: <IconMail />, label: "Email", value: "contact@messagersdedieu.org" },
                 { icon: <IconClock />, label: "Horaires", value: "Dim 9h-13h | Mar & Jeu 18h-20h" },
@@ -332,7 +332,7 @@ export default function ContactPage() {
             </div>
             <div className="mt-8">
               <h3 className="font-display text-3xl font-bold text-brand-950">Temple Central</h3>
-              <p className="mt-2 text-xs font-bold tracking-[0.2em] text-neutral-400 uppercase">Kinshasa, RDC</p>
+              <p className="mt-2 text-xs font-bold tracking-[0.2em] text-neutral-400 uppercase">Pointe-Noire, Congo-Brazzaville</p>
             </div>
           </div>
         </div>

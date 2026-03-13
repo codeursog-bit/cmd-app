@@ -9,38 +9,38 @@ async function main() {
 
   // ── Organisation ──────────────────────────────────────────────────────────
   const org = await prisma.organisation.upsert({
-    where:  { id: 'org-cmdg' },
+    where:  { id: 'org-cmd' },
     update: {},
-    create: { id: 'org-cmdg', name: 'CMDG — Communauté des Messagers de Dieu', description: 'Ministère Mondial d\'Évangélisation et d\'Action Sociale', website: 'https://cmdg.org' }
+    create: { id: 'org-cmd', name: 'CMD — Communauté des Messagers de Dieu', description: 'Ministère d\'Évangélisation et d\'Action Sociale', website: 'https://cmd.cg' }
   })
 
   // ── Église principale ─────────────────────────────────────────────────────
   const church = await prisma.church.upsert({
     where:  { id: 'church-main' },
     update: {},
-    create: { id: 'church-main', name: 'CMDG Siège Central', city: 'Pointe-Noire', country: 'CG', organisationId: org.id, email: 'contact@cmdg.org', phone: '+242 06 000 0000' }
+    create: { id: 'church-main', name: 'CMD Siège Central', city: 'Pointe-Noire', country: 'CG', organisationId: org.id, email: 'contact@cmd.cg', phone: '+242 06 000 0000' }
   })
 
   // ── Utilisateurs ──────────────────────────────────────────────────────────
   const superAdmin = await prisma.user.upsert({
-    where:  { email: 'admin@cmdg.org' },
+    where:  { email: 'admin@cmd.cg' },
     update: {},
-    create: { email: 'admin@cmdg.org', password: hash('Admin@2024!'), firstName: 'Samuel', lastName: 'Kabongo', role: 'SUPER_ADMIN', organisationId: org.id }
+    create: { email: 'admin@cmd.cg', password: hash('Admin@2024!'), firstName: 'Samuel', lastName: 'Moussoki', role: 'SUPER_ADMIN', organisationId: org.id }
   })
   const pastor = await prisma.user.upsert({
-    where:  { email: 'pasteur@cmdg.org' },
+    where:  { email: 'pasteur@cmd.cg' },
     update: {},
-    create: { email: 'pasteur@cmdg.org', password: hash('Pasteur@2024!'), firstName: 'Jean', lastName: 'Mukendi', role: 'PASTOR', organisationId: org.id }
+    create: { email: 'pasteur@cmd.cg', password: hash('Pasteur@2024!'), firstName: 'Jean', lastName: 'Nganga', role: 'PASTOR', organisationId: org.id }
   })
   await prisma.user.upsert({
-    where:  { email: 'media@cmdg.org' },
+    where:  { email: 'media@cmd.cg' },
     update: {},
-    create: { email: 'media@cmdg.org', password: hash('Media@2024!'), firstName: 'Marie', lastName: 'Ntumba', role: 'MEDIA_MANAGER', organisationId: org.id }
+    create: { email: 'media@cmd.cg', password: hash('Media@2024!'), firstName: 'Marie', lastName: 'Bouanga', role: 'MEDIA_MANAGER', organisationId: org.id }
   })
   await prisma.user.upsert({
-    where:  { email: 'bapteme@cmdg.org' },
+    where:  { email: 'bapteme@cmd.cg' },
     update: {},
-    create: { email: 'bapteme@cmdg.org', password: hash('Bapteme@2024!'), firstName: 'Pierre', lastName: 'Mwamba', role: 'BAPTISM_TEACHER', organisationId: org.id }
+    create: { email: 'bapteme@cmd.cg', password: hash('Bapteme@2024!'), firstName: 'Pierre', lastName: 'Mbemba', role: 'BAPTISM_TEACHER', organisationId: org.id }
   })
 
   await prisma.church.update({ where: { id: church.id }, data: { pastorId: pastor.id } })
@@ -59,12 +59,12 @@ async function main() {
 
   // ── Membres ───────────────────────────────────────────────────────────────
   const membres = [
-    { firstName: 'Ange',   lastName: 'Lusamba'   },
-    { firstName: 'Grace',  lastName: 'Kabila'    },
-    { firstName: 'David',  lastName: 'Tshimanga' },
-    { firstName: 'Esther', lastName: 'Nzuzi'     },
-    { firstName: 'Paul',   lastName: 'Mutombo'   },
-    { firstName: 'Rachel', lastName: 'Lukusa'    },
+    { firstName: 'Ange',   lastName: 'Nkounkou'  },
+    { firstName: 'Grace',  lastName: 'Malonga'   },
+    { firstName: 'David',  lastName: 'Tsieno'    },
+    { firstName: 'Esther', lastName: 'Mabiala'   },
+    { firstName: 'Paul',   lastName: 'Boukaka'   },
+    { firstName: 'Rachel', lastName: 'Moutsinga' },
   ]
   for (const m of membres) {
     await prisma.member.upsert({
@@ -86,7 +86,7 @@ async function main() {
       status: 'UPCOMING' as const,
       startDate: new Date(now.getTime() + 3 * 86400000),
       endDate:   new Date(now.getTime() + 3 * 86400000 + 3 * 3600000),
-      location: 'CMDG Siège Central — Avenue de la Paix, Pointe-Noire',
+      location: 'CMD Siège Central — Avenue de la Paix, Pointe-Noire',
       coverUrl: 'https://images.unsplash.com/photo-1498931299472-f7a63a5a1cfa?w=1200&h=630&fit=crop',
       churchId: church.id,
     },
@@ -99,7 +99,7 @@ async function main() {
       status: 'UPCOMING' as const,
       startDate: new Date(now.getTime() + 7 * 86400000),
       endDate:   new Date(now.getTime() + 7 * 86400000 + 12 * 3600000),
-      location: 'CMDG Siège Central',
+      location: 'CMD Siège Central, Pointe-Noire',
       coverUrl: 'https://images.unsplash.com/photo-1507692049790-de58290a4334?w=1200&h=630&fit=crop',
       audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
       churchId: church.id,
@@ -109,11 +109,11 @@ async function main() {
       title: 'Concert de Louange — Feu Sacré',
       slug: 'concert-louange-feu-sacre',
       description: 'Un concert exceptionnel de louange et d\'adoration avec nos équipes musicales et des artistes invités. Une soirée pour glorifier Dieu ensemble.',
-      content: 'Le Concert de Louange "Feu Sacré" est un événement annuel qui rassemble des milliers de fidèles pour une soirée inoubliable.\n\nArtistes invités :\n- Chorale CMDG Siège\n- Groupe de Jeunes "New Generation"\n- Artistes invités surprise\n\nEntrée libre. Venez en famille !',
+      content: 'Le Concert de Louange "Feu Sacré" est un événement annuel qui rassemble des milliers de fidèles pour une soirée inoubliable.\n\nArtistes invités :\n- Chorale CMD Siège\n- Groupe de Jeunes "New Generation"\n- Artistes invités surprise\n\nEntrée libre. Venez en famille !',
       status: 'UPCOMING' as const,
       startDate: new Date(now.getTime() + 14 * 86400000),
       endDate:   new Date(now.getTime() + 14 * 86400000 + 4 * 3600000),
-      location: 'Salle polyvalente de Pointe-Noire',
+      location: 'Palais des Congrès de Pointe-Noire',
       coverUrl: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=1200&h=630&fit=crop',
       videoUrl: 'https://www.youtube.com/watch?v=Ke90Tje7VS0',
       churchId: church.id,
@@ -126,7 +126,7 @@ async function main() {
       content: 'La journée des baptêmes est un moment solennel et joyeux dans la vie de notre communauté.\n\nLes candidats au baptême ont suivi un cours de préparation de 8 semaines.\n\nProgramme :\n- 9h00 : Culte d\'ouverture\n- 10h00 : Témoignages des candidats\n- 11h00 : Baptêmes par immersion\n- 13h00 : Repas communautaire',
       status: 'UPCOMING' as const,
       startDate: new Date(now.getTime() + 21 * 86400000),
-      location: 'Piscine communautaire CMDG',
+      location: 'Plage de la Côte Sauvage, Pointe-Noire',
       coverUrl: 'https://images.unsplash.com/photo-1504275107627-0c2ba7a43dba?w=1200&h=630&fit=crop',
       churchId: church.id,
     },
@@ -138,18 +138,14 @@ async function main() {
       content: 'Ce culte de rentrée a été un moment fort de notre année.\n\nPlus de 500 personnes étaient présentes pour ce culte historique.',
       status: 'COMPLETED' as const,
       startDate: new Date(now.getTime() - 7 * 86400000),
-      location: 'CMDG Siège Central',
+      location: 'CMD Siège Central, Pointe-Noire',
       coverUrl: 'https://images.unsplash.com/photo-1438232992991-995b671e4468?w=1200&h=630&fit=crop',
       videoUrl: 'https://www.youtube.com/watch?v=Ke90Tje7VS0',
       churchId: church.id,
     },
   ]
   for (const ev of events) {
-    await prisma.event.upsert({
-      where:  { id: ev.id },
-      update: ev,
-      create: ev,
-    })
+    await prisma.event.upsert({ where: { id: ev.id }, update: ev, create: ev })
   }
 
   // ── Publications (posts) ──────────────────────────────────────────────────
@@ -200,7 +196,7 @@ async function main() {
       title: 'Témoignage : Guérie d\'un Cancer en Phase Terminale',
       slug: 'temoignage-guerison-cancer',
       excerpt: 'Sœur Rachel partage son témoignage bouleversant : comment Dieu l\'a guérie d\'un cancer en phase terminale après des années de combat et de foi.',
-      content: `## Mon histoire\n\nEn 2021, les médecins m'ont annoncé que j'avais un cancer du foie en phase terminale. J'avais 3 mois à vivre.\n\n## Le miracle\n\nTrois semaines plus tard, lors d'un nouveau scanner :\n\n> "Madame, il n'y a plus de trace du cancer."\n\n## Ma vie aujourd'hui\n\nAujourd'hui, je chante dans le chœur de CMDG. **Ne lâchez pas !** Dieu tient encore des miracles.`,
+      content: `## Mon histoire\n\nEn 2021, les médecins m'ont annoncé que j'avais un cancer du foie en phase terminale. J'avais 3 mois à vivre.\n\n## Le miracle\n\nTrois semaines plus tard, lors d'un nouveau scanner :\n\n> "Madame, il n'y a plus de trace du cancer."\n\n## Ma vie aujourd'hui\n\nAujourd'hui, je chante dans le chœur de CMD Pointe-Noire. **Ne lâchez pas !** Dieu tient encore des miracles.`,
       type: 'TESTIMONY' as const,
       status: 'PUBLISHED' as const,
       coverUrl: 'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?w=1200&h=630&fit=crop',
@@ -212,7 +208,7 @@ async function main() {
       id: 'post-draft-1',
       title: 'Annonce : Camp de Jeunes 2025',
       slug: 'annonce-camp-jeunes-2025',
-      excerpt: 'Inscriptions ouvertes pour le camp de jeunes annuel de la CMDG. Une semaine de formation, de louange et d\'aventure.',
+      excerpt: 'Inscriptions ouvertes pour le camp de jeunes annuel de la CMD à Pointe-Noire.',
       content: 'Contenu en cours de rédaction...',
       type: 'ANNOUNCEMENT' as const,
       status: 'DRAFT' as const,
@@ -221,38 +217,34 @@ async function main() {
     },
   ]
   for (const p of posts) {
-    await prisma.post.upsert({
-      where:  { id: p.id },
-      update: p,
-      create: p,
-    })
+    await prisma.post.upsert({ where: { id: p.id }, update: p, create: p })
   }
 
   // ── Baptêmes ──────────────────────────────────────────────────────────────
-  const memberAnge = await prisma.member.findUnique({ where: { id: 'member-ange' } })
+  const memberAnge  = await prisma.member.findUnique({ where: { id: 'member-ange'  } })
   const memberGrace = await prisma.member.findUnique({ where: { id: 'member-grace' } })
   if (memberAnge) {
     await prisma.baptism.upsert({
       where:  { id: 'baptism-ange' },
       update: {},
-      create: { id: 'baptism-ange', baptismType: 'WATER', baptismDate: new Date('2024-03-15'), location: 'Piscine communautaire CMDG', officiant: 'Pasteur Jean Mukendi', certificateNo: 'CMDG-2024-001', memberId: memberAnge.id }
+      create: { id: 'baptism-ange', baptismType: 'WATER', baptismDate: new Date('2024-03-15'), location: 'Plage de la Côte Sauvage, Pointe-Noire', officiant: 'Pasteur Jean Nganga', certificateNo: 'CMD-2024-001', memberId: memberAnge.id }
     })
   }
   if (memberGrace) {
     await prisma.baptism.upsert({
       where:  { id: 'baptism-grace' },
       update: {},
-      create: { id: 'baptism-grace', baptismType: 'HOLY_SPIRIT', baptismDate: new Date('2024-06-08'), location: 'CMDG Siège Central', officiant: 'Pasteur Jean Mukendi', certificateNo: 'CMDG-2024-002', memberId: memberGrace.id }
+      create: { id: 'baptism-grace', baptismType: 'HOLY_SPIRIT', baptismDate: new Date('2024-06-08'), location: 'CMD Siège Central, Pointe-Noire', officiant: 'Pasteur Jean Nganga', certificateNo: 'CMD-2024-002', memberId: memberGrace.id }
     })
   }
 
   console.log('✅ Seed terminé')
   console.log('')
   console.log('Comptes créés :')
-  console.log('  Super Admin : admin@cmdg.org / Admin@2024!')
-  console.log('  Pasteur     : pasteur@cmdg.org / Pasteur@2024!')
-  console.log('  Média       : media@cmdg.org / Media@2024!')
-  console.log('  Baptême     : bapteme@cmdg.org / Bapteme@2024!')
+  console.log('  Super Admin : admin@cmd.cg / Admin@2024!')
+  console.log('  Pasteur     : pasteur@cmd.cg / Pasteur@2024!')
+  console.log('  Média       : media@cmd.cg / Media@2024!')
+  console.log('  Baptême     : bapteme@cmd.cg / Bapteme@2024!')
   console.log('')
   console.log(`ID de l'église principale : ${church.id}`)
   console.log('→ Copiez cet ID dans MAIN_CHURCH_ID et NEXT_PUBLIC_DEFAULT_CHURCH_ID dans votre .env')

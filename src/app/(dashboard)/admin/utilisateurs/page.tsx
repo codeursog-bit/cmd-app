@@ -141,7 +141,7 @@ export default function UtilisateursPage() {
                   </div>
                 ))}
               </div>
-              {[['Email *','email',newEmail,setNewEmail,'user@cmdg.org'],['Téléphone','tel',newPhone,setNewPhone,'+243 8x...'],['Mot de passe *','password',newPwd,setNewPwd,'Min. 8 caractères']].map(([l,t,v,fn,ph]) => (
+              {[['Email *','email',newEmail,setNewEmail,'user@cmd.cg'],['Téléphone','tel',newPhone,setNewPhone,'+243 8x...'],['Mot de passe *','password',newPwd,setNewPwd,'Min. 8 caractères']].map(([l,t,v,fn,ph]) => (
                 <div key={l as string}>
                   <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-500 mb-1">{l as string}</label>
                   <input type={t as string} value={v as string} onChange={e => (fn as Function)(e.target.value)}

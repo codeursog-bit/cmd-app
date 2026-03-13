@@ -108,7 +108,7 @@ export default function NewMemberPage() {
             <Field label="Email" type="email" value={email} onChange={setEmail} placeholder="jean@email.com"/>
             <div>
               <label className="block font-sans text-[10px] uppercase tracking-widest text-neutral-500 font-bold mb-1">Adresse</label>
-              <textarea value={address} onChange={e=>setAddress(e.target.value)} rows={3} placeholder="Avenue de la Paix, Gombe, Kinshasa"
+              <textarea value={address} onChange={e=>setAddress(e.target.value)} rows={3} placeholder="Avenue de la Paix, Pointe-Noire"
                 className="w-full border border-neutral-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-500 transition-colors resize-none"/>
             </div>
             <div>

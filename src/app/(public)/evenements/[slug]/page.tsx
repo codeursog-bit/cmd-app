@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   })
   if (!event) return { title: 'Événement introuvable' }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://cmdg.org'
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://cmd.cg'
   const fmtDate = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }).format(event.startDate)
   const description = event.description || `${event.title} — ${fmtDate} · ${event.church.name}`
   const images = event.coverUrl ? [{ url: event.coverUrl, width: 1200, height: 630, alt: event.title }] : []

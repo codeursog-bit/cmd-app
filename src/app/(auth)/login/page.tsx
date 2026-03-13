@@ -63,7 +63,7 @@ export default function LoginPage() {
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 flex items-center text-neutral-300"><IconMail /></div>
                 <input type="email" value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==='Enter'&&handleLogin()}
-                  className="h-14 w-full border-b border-neutral-200 bg-transparent pl-10 pr-4 text-sm outline-none transition-all focus:border-brand-600" placeholder="admin@cmdg.org"/>
+                  className="h-14 w-full border-b border-neutral-200 bg-transparent pl-10 pr-4 text-sm outline-none transition-all focus:border-brand-600" placeholder="admin@cmd.cg"/>
               </div>
             </div>
             <div className="space-y-3">

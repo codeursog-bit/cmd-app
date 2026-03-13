@@ -201,7 +201,9 @@ export default function HomeClient() {
                   <div>
                     <div className="flex items-center gap-3 mb-4">
                       <span className="px-3 py-1 bg-brand-600 text-white text-[10px] font-bold uppercase tracking-widest rounded-full">Prochain événement</span>
-                      {featured.location && <span className="text-brand-400 text-xs">{featured.location}</span>}
+                      {featured.location && (
+                        <span className="text-brand-400 text-xs">{featured.location}</span>
+                      )}
                     </div>
                     <h3 className="font-display text-3xl lg:text-4xl font-bold text-white leading-tight group-hover:text-brand-300 transition-colors">
                       {featured.title}
