@@ -1,5 +1,6 @@
 'use client'
 import { useState } from "react"
+import { apiFetch } from '@/hooks/useApi'
 import { motion, AnimatePresence } from "motion/react";
 
 // Hand-coded minimal SVG icons
@@ -86,12 +87,20 @@ export default function ContactPage() {
     message: "",
   });
 
-  const handleSubmit = () => {
-    setStatus("loading");
-    // Simulate API call
-    setTimeout(() => {
-      setStatus("success");
-    }, 2000);
+  const handleSubmit = async () => {
+    if (!formData.firstName || !formData.email || !formData.message) return
+    setStatus("loading")
+    try {
+      await apiFetch('/api/contact', 'POST', {
+        name: `${formData.firstName} ${formData.lastName}`.trim(),
+        email: formData.email,
+        subject: formData.subject,
+        message: formData.message,
+      })
+      setStatus("success")
+    } catch {
+      setStatus("idle")
+    }
   };
 
   const handleReset = () => {

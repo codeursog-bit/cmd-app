@@ -228,6 +228,3 @@ export default async function EvenementPublicPage({ params }: Props) {
 
   )
 }
-
-
-
