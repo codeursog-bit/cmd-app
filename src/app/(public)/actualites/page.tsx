@@ -1,5 +1,5 @@
 'use client'
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { motion } from 'motion/react'
 import { useApi } from '@/hooks/useApi'
@@ -30,7 +30,7 @@ const FILTERS: { value: Filter; label: string }[] = [
   { value: 'ANNOUNCEMENT', label: 'Annonces' },
 ]
 
-export default function ActualitesPage() {
+function ActualitesContent() {
   const searchParams = useSearchParams()
   const [filter, setFilter] = useState<Filter>('TOUT')
   const [search, setSearch] = useState('')
@@ -173,5 +173,13 @@ export default function ActualitesPage() {
         </div>
       </section>
     </div>
+  )
+}
+
+export default function ActualitesPage() {
+  return (
+    <Suspense fallback={null}>
+      <ActualitesContent />
+    </Suspense>
   )
 }
