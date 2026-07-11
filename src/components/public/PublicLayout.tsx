@@ -67,15 +67,18 @@ export const Navbar = () => {
   const pathname = usePathname()
 
   // Pages avec fond clair (contact, etc.) — la navbar doit toujours être visible
-  const lightPages = ['/contact', '/don', '/about']
+  const lightPages = ['/contact', '/don', '/about', '/prophete', '/eglises', '/pour-vous']
   const isLightPage = lightPages.some(p => pathname.startsWith(p))
   const isDark = !isScrolled && !isLightPage
 
   const navLinks = [
-    { name: 'Accueil',    href: '/' },
-    { name: 'Blog',       href: '/blog' },
-    { name: 'Événements', href: '/evenements' },
-    { name: 'Contact',    href: '/contact' },
+    { name: 'Accueil',     href: '/' },
+    { name: 'Communauté',  href: '/about' },
+    { name: 'Prophète',    href: '/prophete' },
+    { name: 'Églises',     href: '/eglises' },
+    { name: 'Actualités',  href: '/actualites' },
+    { name: 'Pour vous',   href: '/pour-vous' },
+    { name: 'Contact',     href: '/contact' },
   ]
 
   return (
@@ -111,11 +114,7 @@ export const Navbar = () => {
           {/* CTA desktop */}
           <div className="hidden lg:flex items-center gap-3">
             <Link href="/don"
-              className={`flex items-center gap-1.5 rounded-lg border px-4 py-2 font-sans text-sm font-bold transition-all ${
-                isDark
-                  ? 'border-brand-400 text-brand-300 hover:bg-brand-800'
-                  : 'border-brand-600 text-brand-600 hover:bg-brand-50'
-              }`}>
+              className="flex items-center gap-2 rounded-lg bg-accent-600 hover:bg-accent-500 px-5 py-2 font-sans text-sm font-bold text-white shadow-sm transition-all">
               <IconHeart />
               Faire un don
             </Link>
@@ -154,7 +153,8 @@ export const Navbar = () => {
               ))}
               <div className="mt-8 flex flex-col w-full px-12 gap-3">
                 <Link href="/don" onClick={() => setIsMenuOpen(false)}
-                  className="block w-full rounded-lg border border-brand-400 py-3 text-center font-sans text-base font-bold text-brand-300">
+                  className="flex items-center justify-center gap-2 w-full rounded-lg bg-accent-600 py-3 text-center font-sans text-base font-bold text-white">
+                  <IconHeart />
                   Faire un don
                 </Link>
                 <Link href="/login" onClick={() => setIsMenuOpen(false)}
@@ -265,7 +265,7 @@ export const Footer = () => (
         <div>
           <h4 className="mb-6 font-display text-lg font-bold">Navigation</h4>
           <ul className="space-y-3 font-sans text-sm text-neutral-400">
-            {[['Accueil','/'],['Blog','/blog'],['Événements','/evenements'],['Faire un don','/don'],['Contact','/contact']].map(([n,h]) => (
+            {[['Accueil','/'],['Notre communauté','/about'],['Le Prophète','/prophete'],['Nos Églises','/eglises'],['Actualités','/actualites'],['Pour vous','/pour-vous'],['Faire un don','/don'],['Contact','/contact']].map(([n,h]) => (
               <li key={n}><Link href={h} className="transition-colors hover:text-brand-400">{n}</Link></li>
             ))}
           </ul>
