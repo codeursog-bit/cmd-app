@@ -22,21 +22,6 @@ const IconX = () => (
     <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
   </svg>
 )
-const IconHeart = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-  </svg>
-)
-const IconMail = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
-  </svg>
-)
-const IconArrow = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M5 12h14m-7-7 7 7-7 7"/>
-  </svg>
-)
 const IconFacebook = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
@@ -77,8 +62,6 @@ export const Navbar = () => {
     { name: 'Prophète',    href: '/prophete' },
     { name: 'Églises',     href: '/eglises' },
     { name: 'Actualités',  href: '/actualites' },
-    { name: 'Pour vous',   href: '/pour-vous' },
-    { name: 'Contact',     href: '/contact' },
   ]
 
   return (
@@ -112,15 +95,18 @@ export const Navbar = () => {
           </div>
 
           {/* CTA desktop */}
-          <div className="hidden lg:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-4">
             <Link href="/don"
-              className="flex items-center gap-2 rounded-lg bg-accent-600 hover:bg-accent-500 px-5 py-2 font-sans text-sm font-bold text-white shadow-sm transition-all">
-              <IconHeart />
+              className={`rounded-lg border px-5 py-2 font-sans text-sm font-bold transition-all duration-300 ${
+                isDark
+                  ? 'border-white/70 text-white hover:border-transparent hover:bg-gradient-to-r hover:from-brand-600 hover:to-sky-500'
+                  : 'border-brand-600 text-brand-600 hover:border-transparent hover:bg-gradient-to-r hover:from-brand-600 hover:to-sky-500 hover:text-white'
+              }`}>
               Faire un don
             </Link>
-            <Link href="/login"
-              className="rounded-lg bg-brand-600 px-5 py-2 font-sans text-sm font-bold text-white transition-all hover:bg-brand-700 shadow-sm">
-              Se connecter
+            <Link href="/contact"
+              className="rounded-lg border border-brand-700 bg-gradient-to-r from-brand-600 to-sky-500 px-5 py-2 font-sans text-sm font-bold text-white shadow-sm transition-all duration-300 hover:border-brand-600 hover:bg-none hover:bg-transparent hover:text-brand-600">
+              Nous rejoindre
             </Link>
           </div>
 
@@ -153,13 +139,12 @@ export const Navbar = () => {
               ))}
               <div className="mt-8 flex flex-col w-full px-12 gap-3">
                 <Link href="/don" onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center justify-center gap-2 w-full rounded-lg bg-accent-600 py-3 text-center font-sans text-base font-bold text-white">
-                  <IconHeart />
+                  className="flex items-center justify-center w-full rounded-lg border border-white/70 py-3 text-center font-sans text-base font-bold text-white transition-all duration-300 hover:border-transparent hover:bg-gradient-to-r hover:from-brand-600 hover:to-sky-500">
                   Faire un don
                 </Link>
-                <Link href="/login" onClick={() => setIsMenuOpen(false)}
-                  className="block w-full rounded-lg bg-brand-600 py-3 text-center font-sans text-base font-bold text-white">
-                  Se connecter
+                <Link href="/contact" onClick={() => setIsMenuOpen(false)}
+                  className="block w-full rounded-lg border border-brand-500 bg-gradient-to-r from-brand-600 to-sky-500 py-3 text-center font-sans text-base font-bold text-white transition-all duration-300">
+                  Nous rejoindre
                 </Link>
               </div>
             </div>
@@ -170,75 +155,11 @@ export const Navbar = () => {
   )
 }
 
-// ── Newsletter (fonctionnelle) ────────────────────────────────────────────────
-const NewsletterSection = () => {
-  const [email, setEmail] = useState('')
-  const [state, setState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!email || !email.includes('@')) return
-    setState('loading')
-    try {
-      const res = await fetch('/api/newsletter', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      })
-      const data = await res.json()
-      if (data.success) { setState('success'); setEmail('') }
-      else { setState('error'); setTimeout(() => setState('idle'), 3000) }
-    } catch {
-      setState('error'); setTimeout(() => setState('idle'), 3000)
-    }
-  }
-
-  return (
-    <div className="bg-brand-900 border-t border-brand-800 py-14">
-      <div className="container mx-auto px-6 text-center">
-        <div className="inline-flex items-center justify-center w-12 h-12 bg-brand-800 rounded-2xl mb-5">
-          <IconMail />
-        </div>
-        <h3 className="font-display text-2xl font-bold text-white mb-2">Restez connecté</h3>
-        <p className="text-brand-300 text-sm mb-7 max-w-sm mx-auto">Recevez nos prédications, témoignages et annonces directement dans votre boîte mail.</p>
-
-        {state === 'success' ? (
-          <div className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-900/50 border border-emerald-700 rounded-xl text-emerald-300 text-sm font-bold">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-            Merci ! Vous êtes bien inscrit(e).
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-            <input
-              type="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              placeholder="votre@email.com"
-              required
-              className="flex-1 px-4 py-3 rounded-xl bg-brand-800 border border-brand-700 text-white placeholder:text-brand-500 text-sm focus:outline-none focus:border-brand-400 transition-colors"
-            />
-            <button type="submit" disabled={state === 'loading'}
-              className="flex items-center justify-center gap-2 px-6 py-3 bg-brand-600 hover:bg-brand-500 text-white rounded-xl text-sm font-bold transition-colors disabled:opacity-50 whitespace-nowrap">
-              {state === 'loading' ? (
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              ) : (
-                <><IconArrow /> S&apos;abonner</>
-              )}
-            </button>
-          </form>
-        )}
-        {state === 'error' && <p className="text-red-400 text-xs mt-3">Une erreur s&apos;est produite. Réessayez.</p>}
-      </div>
-    </div>
-  )
-}
-
 // ── Footer ────────────────────────────────────────────────────────────────────
 export const Footer = () => (
   <footer className="bg-brand-950 text-white">
-    <NewsletterSection />
     <div className="container mx-auto px-6 pt-16 pb-8">
-      <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
         <div className="space-y-5">
           <div className="flex items-center gap-3">
             <img src="/logo-cmd.png" alt="CMD Logo" className="h-12 w-12 object-contain" />
@@ -265,21 +186,9 @@ export const Footer = () => (
         <div>
           <h4 className="mb-6 font-display text-lg font-bold">Navigation</h4>
           <ul className="space-y-3 font-sans text-sm text-neutral-400">
-            {[['Accueil','/'],['Notre communauté','/about'],['Le Prophète','/prophete'],['Nos Églises','/eglises'],['Actualités','/actualites'],['Pour vous','/pour-vous'],['Faire un don','/don'],['Contact','/contact']].map(([n,h]) => (
+            {[['Accueil','/'],['Notre communauté','/about'],['Le Prophète','/prophete'],['Nos Églises','/eglises'],['Actualités','/actualites'],['Faire un don','/don'],['Contact','/contact']].map(([n,h]) => (
               <li key={n}><Link href={h} className="transition-colors hover:text-brand-400">{n}</Link></li>
             ))}
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="mb-6 font-display text-lg font-bold">Nos Églises</h4>
-          <ul className="space-y-3 font-sans text-sm text-neutral-400">
-            <li>CMD Pointe-Noire Tchimbamba ex-mucodec</li>
-            <li>CMD Brazzaville </li>
-            <li>CMD Pointe-Noire Ngoyo </li>
-            <li>CMD Pointe-Noire Tiétié</li>
-            <li>CMD Pointe-Noire Tchibala</li>
-            <li>CMD Pointe-Noire Matende</li>
           </ul>
         </div>
 
@@ -297,6 +206,11 @@ export const Footer = () => (
             <li className="flex items-center gap-2">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-brand-500"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
               contact@messagersdedieu.org
+            </li>
+            <li className="pt-2">
+              <Link href="/eglises" className="inline-flex items-center gap-1.5 text-brand-400 font-bold hover:text-brand-300 transition-colors">
+                Voir nos 6 églises →
+              </Link>
             </li>
           </ul>
         </div>

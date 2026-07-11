@@ -89,7 +89,7 @@ export default function HomeClient() {
       {/* HERO — bannière événement (esprit de l'image, format desktop) */}
       <section className="relative w-full min-h-[92vh] overflow-hidden flex items-center pt-24">
         <HeroVideo />
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-950/95 via-brand-900/90 to-brand-800/80 z-0" />
+        <div className="absolute inset-0 bg-gradient-to-br from-brand-950/95 via-brand-900/90 to-sky-900/80 z-0" />
         {/* Touches orange décoratives */}
         <div className="absolute -right-32 -top-32 w-[500px] h-[500px] bg-accent-600/20 rounded-full blur-3xl z-0" />
 
@@ -213,7 +213,7 @@ export default function HomeClient() {
       </section>
 
       {/* PUBLICATIONS */}
-      <section className="bg-brand-950 py-24">
+      <section className="bg-gradient-to-b from-brand-950 to-sky-950 py-24">
         <div className="container mx-auto px-6">
           <div className="text-center">
             <span className="font-sans text-accent-400 text-sm tracking-[0.2em] uppercase font-bold">Fil d&apos;actualité</span>
@@ -231,7 +231,7 @@ export default function HomeClient() {
             ))}
           </div>
           <div className="flex justify-center mt-12">
-            <Link href="/actualites" className="border border-accent-500 text-accent-400 px-8 py-3 font-sans text-sm font-bold tracking-widest uppercase hover:bg-accent-600 hover:text-white transition-all rounded-lg">
+            <Link href="/actualites" className="border border-brand-500 text-brand-300 px-8 py-3 font-sans text-sm font-bold tracking-widest uppercase hover:border-transparent hover:bg-gradient-to-r hover:from-brand-600 hover:to-sky-500 hover:text-white transition-all rounded-lg">
               Voir toutes les publications
             </Link>
           </div>
@@ -290,7 +290,7 @@ export default function HomeClient() {
                     const dt = new Date(ev.startDate)
                     return (
                       <Link key={ev.id} href={`/evenements/${ev.slug}`}
-                        className="group flex gap-4 p-5 border border-neutral-100 hover:border-accent-200 hover:bg-accent-50/50 transition-all rounded-xl">
+                        className="group flex gap-4 p-5 border border-neutral-100 hover:border-brand-200 hover:bg-brand-50/50 transition-all rounded-xl">
                         <div className="w-12 h-14 bg-brand-50 border border-brand-100 flex flex-col items-center justify-center shrink-0 rounded-lg">
                           <span className="font-display text-xl font-extrabold text-brand-700 leading-none">{String(dt.getDate()).padStart(2, '0')}</span>
                           <span className="text-[9px] font-bold uppercase text-brand-400">{MONTHS[dt.getMonth()]}</span>
@@ -343,7 +343,7 @@ export default function HomeClient() {
       </section>
 
       {/* CTA newsletter */}
-      <section className="bg-brand-950 py-24">
+      <section className="bg-gradient-to-b from-brand-950 to-sky-950 py-24">
         <div className="container mx-auto px-6 text-center max-w-2xl">
           <span className="font-sans text-accent-400 text-sm tracking-[0.2em] uppercase font-bold">Rejoignez-nous</span>
           <h2 className="font-display text-5xl font-extrabold text-white mt-3 leading-tight">Rejoignez notre communauté</h2>
@@ -353,13 +353,13 @@ export default function HomeClient() {
           {sent ? (
             <div className="mt-12 py-6 bg-emerald-900/50 border border-emerald-700 rounded-xl text-emerald-300 font-bold">Merci ! Nous vous contacterons bientôt.</div>
           ) : (
-            <div className="mt-12 flex flex-col sm:flex-row gap-3">
+            <div className="mt-12 flex flex-col md:flex-row gap-3 w-full">
               <input type="text" placeholder="Votre prénom" value={firstName} onChange={e => setFirst(e.target.value)}
-                className="flex-1 h-12 px-6 bg-brand-900 border border-brand-800 text-white placeholder-brand-600 font-sans text-sm focus:outline-none focus:border-accent-500 transition-colors rounded-lg" />
+                className="w-full md:flex-1 md:min-w-0 h-12 px-5 bg-brand-900 border border-brand-800 text-white placeholder-brand-500 font-sans text-sm focus:outline-none focus:border-sky-400 transition-colors rounded-lg" />
               <input type="email" placeholder="Votre adresse email" value={email} onChange={e => setEmail(e.target.value)}
-                className="flex-1 h-12 px-6 bg-brand-900 border border-brand-800 text-white placeholder-brand-600 font-sans text-sm focus:outline-none focus:border-accent-500 transition-colors rounded-lg" />
+                className="w-full md:flex-1 md:min-w-0 h-12 px-5 bg-brand-900 border border-brand-800 text-white placeholder-brand-500 font-sans text-sm focus:outline-none focus:border-sky-400 transition-colors rounded-lg" />
               <div onClick={handleSubscribe}
-                className="h-12 bg-accent-600 hover:bg-accent-500 text-white flex items-center justify-center px-8 font-sans text-xs font-bold tracking-widest uppercase transition-all cursor-pointer whitespace-nowrap rounded-lg">
+                className="w-full md:w-auto h-12 border border-brand-700 bg-gradient-to-r from-brand-600 to-sky-500 hover:from-brand-700 hover:to-sky-600 text-white flex items-center justify-center px-8 font-sans text-xs font-bold tracking-widest uppercase transition-all cursor-pointer whitespace-nowrap rounded-lg shrink-0">
                 Je veux en savoir plus
               </div>
             </div>

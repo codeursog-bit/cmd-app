@@ -66,7 +66,7 @@ export default function DonPage() {
     <div className="min-h-screen bg-white font-sans text-neutral-950 selection:bg-brand-600 selection:text-white">
 
       {/* HERO — même patron que toutes les autres pages */}
-      <header className="relative flex h-[350px] w-full flex-col justify-center bg-brand-950 px-6 md:px-12 pt-20 overflow-hidden">
+      <header className="relative flex h-[350px] w-full flex-col justify-center bg-gradient-to-br from-brand-950 via-brand-900 to-sky-950 px-6 md:px-12 pt-20 overflow-hidden">
         <div className="absolute -right-24 -top-24 w-[400px] h-[400px] bg-accent-600/10 rounded-full blur-3xl" />
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="relative mx-auto w-full max-w-7xl">
           <nav className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-brand-400">
@@ -226,7 +226,7 @@ export default function DonPage() {
                     </div>
 
                     <button onClick={() => { if (!amount || parseFloat(amount) <= 0) { setError('Entrez un montant valide'); return }; setError(null); setStep(2) }}
-                      className="w-full flex items-center justify-center gap-2 py-4 bg-accent-600 hover:bg-accent-500 text-white rounded-xl font-sans font-bold text-sm tracking-wide uppercase transition-all">
+                      className="w-full flex items-center justify-center gap-2 py-4 border border-brand-700 bg-gradient-to-r from-brand-600 to-sky-500 hover:from-brand-700 hover:to-sky-600 text-white rounded-xl font-sans font-bold text-sm tracking-wide uppercase transition-all">
                       Continuer <IconArrowRight />
                     </button>
                   </div>
@@ -269,7 +269,7 @@ export default function DonPage() {
                         <IconArrowLeft /> Retour
                       </button>
                       <button onClick={handleSubmit} disabled={loading}
-                        className="flex-1 py-3.5 bg-accent-600 hover:bg-accent-500 text-white rounded-xl font-bold text-sm tracking-wide uppercase transition-all disabled:opacity-50">
+                        className="flex-1 py-3.5 border border-brand-700 bg-gradient-to-r from-brand-600 to-sky-500 hover:from-brand-700 hover:to-sky-600 text-white rounded-xl font-bold text-sm tracking-wide uppercase transition-all disabled:opacity-50">
                         {loading ? 'Envoi...' : 'Confirmer le don'}
                       </button>
                     </div>

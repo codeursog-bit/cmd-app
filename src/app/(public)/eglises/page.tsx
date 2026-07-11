@@ -63,7 +63,7 @@ export default function EglisesPage() {
     <div className="min-h-screen bg-white font-sans text-neutral-950 selection:bg-brand-600 selection:text-white">
 
       {/* HERO */}
-      <header className="relative flex h-[350px] w-full flex-col justify-center bg-brand-950 px-6 md:px-12 pt-20 overflow-hidden">
+      <header className="relative flex h-[350px] w-full flex-col justify-center bg-gradient-to-br from-brand-950 via-brand-900 to-sky-950 px-6 md:px-12 pt-20 overflow-hidden">
         <div className="absolute -right-24 -top-24 w-[400px] h-[400px] bg-accent-600/10 rounded-full blur-3xl" />
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="relative mx-auto w-full max-w-7xl">
           <nav className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-brand-400">
@@ -110,14 +110,14 @@ export default function EglisesPage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-brand-950 py-24 text-center">
+      <section className="bg-gradient-to-b from-brand-950 to-sky-950 py-24 text-center">
         <div className="container mx-auto px-6 max-w-2xl">
           <span className="font-sans text-accent-400 text-sm tracking-[0.2em] uppercase font-bold">Une église près de chez vous</span>
           <h2 className="font-display text-4xl font-extrabold text-white mt-3">Vous ne savez pas où aller ?</h2>
           <p className="font-sans text-brand-300 text-base mt-4 leading-relaxed">
             Contactez-nous et nous vous orienterons vers l&apos;église la plus proche de chez vous.
           </p>
-          <Link href="/contact" className="inline-block mt-10 bg-accent-600 hover:bg-accent-500 text-white px-10 py-4 rounded-xl font-sans text-sm font-bold tracking-widest uppercase transition-all">
+          <Link href="/contact" className="inline-block mt-10 border border-brand-700 bg-gradient-to-r from-brand-600 to-sky-500 hover:from-brand-700 hover:to-sky-600 text-white px-10 py-4 rounded-xl font-sans text-sm font-bold tracking-widest uppercase transition-all">
             Nous contacter →
           </Link>
         </div>

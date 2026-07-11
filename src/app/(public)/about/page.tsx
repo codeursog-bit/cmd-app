@@ -37,7 +37,7 @@ export default function AboutPage() {
     <div className="min-h-screen bg-white font-sans text-neutral-950 selection:bg-brand-600 selection:text-white">
 
       {/* HERO — même patron que /actualites : bandeau sombre + fil d'Ariane + halo orange */}
-      <header className="relative flex h-[350px] w-full flex-col justify-center bg-brand-950 px-6 md:px-12 pt-20 overflow-hidden">
+      <header className="relative flex h-[350px] w-full flex-col justify-center bg-gradient-to-br from-brand-950 via-brand-900 to-sky-950 px-6 md:px-12 pt-20 overflow-hidden">
         <div className="absolute -right-24 -top-24 w-[400px] h-[400px] bg-accent-600/10 rounded-full blur-3xl" />
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="relative mx-auto w-full max-w-7xl">
           <nav className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-brand-400">
@@ -216,7 +216,7 @@ export default function AboutPage() {
             Rejoins-nous lors d&apos;un prochain culte ou contacte-nous pour en savoir plus sur la vie de la communauté.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/actualites?filter=EVENT" className="bg-accent-600 hover:bg-accent-500 text-white px-8 py-4 rounded-xl font-sans text-sm font-bold tracking-widest uppercase transition-all">
+            <Link href="/actualites?filter=EVENT" className="border border-brand-700 bg-gradient-to-r from-brand-600 to-sky-500 hover:from-brand-700 hover:to-sky-600 text-white px-8 py-4 rounded-xl font-sans text-sm font-bold tracking-widest uppercase transition-all">
               Voir nos prochains cultes
             </Link>
             <Link href="/contact" className="border border-brand-600 text-brand-600 hover:bg-brand-50 px-8 py-4 rounded-xl font-sans text-sm font-bold tracking-widest uppercase transition-all">

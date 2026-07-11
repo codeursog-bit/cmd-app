@@ -94,7 +94,7 @@ function ActualitesContent() {
 
   return (
     <div className="min-h-screen bg-white font-sans text-neutral-950 selection:bg-brand-600 selection:text-white">
-      <header className="relative flex h-[350px] w-full flex-col justify-center bg-brand-950 px-6 md:px-12 pt-20 overflow-hidden">
+      <header className="relative flex h-[350px] w-full flex-col justify-center bg-gradient-to-br from-brand-950 via-brand-900 to-sky-950 px-6 md:px-12 pt-20 overflow-hidden">
         <div className="absolute -right-24 -top-24 w-[400px] h-[400px] bg-accent-600/10 rounded-full blur-3xl" />
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="relative mx-auto w-full max-w-7xl">
           <nav className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-brand-400">
@@ -163,12 +163,12 @@ function ActualitesContent() {
         )}
       </main>
 
-      <section className="bg-brand-950 py-24 text-center">
+      <section className="bg-gradient-to-b from-brand-950 to-sky-950 py-24 text-center">
         <div className="container mx-auto px-6">
           <h2 className="font-display text-3xl text-white font-extrabold mb-8">Restez informé de nos actualités</h2>
           <div className="flex flex-col sm:flex-row justify-center gap-4 max-w-md mx-auto">
             <input type="email" placeholder="Votre email" className="bg-brand-900 border border-brand-800 px-6 py-3 text-sm text-white outline-none focus:border-accent-500 w-full rounded-lg" />
-            <button className="bg-accent-600 text-white px-8 py-3 text-xs font-bold tracking-widest uppercase hover:bg-accent-500 transition-all rounded-lg whitespace-nowrap">S&apos;abonner</button>
+            <button className="border border-brand-700 bg-gradient-to-r from-brand-600 to-sky-500 hover:from-brand-700 hover:to-sky-600 text-white px-8 py-3 text-xs font-bold tracking-widest uppercase transition-all rounded-lg whitespace-nowrap">S&apos;abonner</button>
           </div>
         </div>
       </section>
