@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { AnimatePresence, motion } from 'motion/react'
-import { useScrollPosition } from '@/hooks/useScrollPosition'
 import { apiFetch } from '@/hooks/useApi'
 
 // ── Icônes SVG ────────────────────────────────────────────────────────────────
@@ -46,79 +45,63 @@ const IconTiktok = () => (
 
 // ── Navbar ────────────────────────────────────────────────────────────────────
 export const Navbar = () => {
-  const scrollY = useScrollPosition()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const isScrolled = scrollY > 60
   const pathname = usePathname()
 
-  // Pages avec fond clair (contact, etc.) — la navbar doit toujours être visible
-  const lightPages = ['/contact', '/don', '/about', '/prophete', '/eglises', '/pour-vous']
-  const isLightPage = lightPages.some(p => pathname.startsWith(p))
-  const isDark = !isScrolled && !isLightPage
-
   const navLinks = [
-    { name: 'Accueil',     href: '/' },
-    { name: 'Communauté',  href: '/about' },
-    { name: 'Prophète',    href: '/prophete' },
-    { name: 'Églises',     href: '/eglises' },
-    { name: 'Actualités',  href: '/actualites' },
+    { name: 'Accueil',                     href: '/' },
+    { name: 'Tout sur notre communauté',   href: '/about' },
+    { name: 'Le Prophète',                 href: '/prophete' },
+    { name: 'Nos Eglises',                 href: '/eglises' },
+    { name: 'Pour vous !',                 href: '/pour-vous' },
+    { name: 'Nous Joindre',                href: '/contact' },
   ]
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 z-50 w-full transition-all duration-300 ease-in-out ${
-        isScrolled || isLightPage ? 'bg-white py-3 shadow-md' : 'bg-transparent py-5'
-      }`}>
-        <div className="container mx-auto flex items-center justify-between px-6">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-3">
-            <img src="/logo-cmd.png" alt="CMD Logo" className="h-12 w-12 object-contain" />
-            <div className="flex flex-col">
-              <span className={`font-display text-xl font-bold leading-tight ${isDark ? 'text-white' : 'text-brand-950'}`}>CMD</span>
-              <span className={`hidden text-[10px] font-bold tracking-[0.2em] uppercase sm:block ${isDark ? 'text-brand-300' : 'text-neutral-500'}`}>
-                Communauté des Messagers de Dieu
-              </span>
-            </div>
+      <header className="relative z-50 w-full bg-white">
+        {/* ── Bloc logo / titre / sous-titre (desktop) ── */}
+        <div className="hidden lg:flex flex-col items-center py-6">
+          <Link href="/" className="flex flex-col items-center">
+            <img src="/logo-cmd.png" alt="CMD Logo" className="h-20 w-20 object-contain" />
+            <h1 className="mt-2 font-orbit text-4xl xl:text-5xl font-bold text-brand-700 tracking-wide text-center">
+              COMMUNAUTÉ DES MESSAGERS DE DIEU
+            </h1>
+            <p className="mt-1 font-sans text-sm font-semibold text-neutral-700 text-center">
+              Ministère Mondial d&apos;Évangélisation et d&apos;Actions Sociales
+            </p>
           </Link>
+        </div>
 
-          {/* Links desktop */}
-          <div className="hidden items-center gap-8 lg:flex">
-            {navLinks.map((link) => (
+        {/* ── Ligne de navigation (desktop) ── */}
+        <nav className="hidden lg:flex items-center justify-center gap-10 border-t border-neutral-100 py-4">
+          {navLinks.map(link => {
+            const active = pathname === link.href
+            return (
               <Link key={link.name} href={link.href}
-                className={`relative font-sans text-sm font-medium transition-colors hover:text-brand-600 ${isDark ? 'text-white/90' : 'text-neutral-700'}`}>
+                className={`relative font-sans text-sm font-medium transition-colors ${
+                  active ? 'text-accent-600 font-bold' : 'text-neutral-700 hover:text-brand-600'
+                }`}>
                 {link.name}
-                {pathname === link.href && (
-                  <motion.div layoutId="nav-underline" className="absolute -bottom-1 left-0 h-0.5 w-full bg-brand-600" />
-                )}
+                {active && <div className="absolute -bottom-2 left-0 h-0.5 w-full bg-accent-500" />}
               </Link>
-            ))}
-          </div>
+            )
+          })}
+        </nav>
 
-          {/* CTA desktop */}
-          <div className="hidden lg:flex items-center gap-4">
-            <Link href="/don"
-              className={`rounded-lg border px-5 py-2 font-sans text-sm font-bold transition-all duration-300 ${
-                isDark
-                  ? 'border-white/70 text-white hover:border-transparent hover:bg-gradient-to-r hover:from-brand-600 hover:to-sky-500'
-                  : 'border-brand-600 text-brand-600 hover:border-transparent hover:bg-gradient-to-r hover:from-brand-600 hover:to-sky-500 hover:text-white'
-              }`}>
-              Faire un don
-            </Link>
-            <Link href="/contact"
-              className="rounded-lg border border-brand-700 bg-gradient-to-r from-brand-600 to-sky-500 px-5 py-2 font-sans text-sm font-bold text-white shadow-sm transition-all duration-300 hover:border-brand-600 hover:bg-none hover:bg-transparent hover:text-brand-600">
-              Nous rejoindre
-            </Link>
-          </div>
-
-          {/* Burger mobile */}
-          <button onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className={`lg:hidden ${isDark ? 'text-white' : 'text-brand-950'}`}>
+        {/* ── Barre compacte (mobile) ── */}
+        <div className="flex lg:hidden items-center justify-between px-6 py-3 border-b border-neutral-100">
+          <Link href="/" className="flex items-center gap-2">
+            <img src="/logo-cmd.png" alt="CMD Logo" className="h-10 w-10 object-contain" />
+            <span className="font-orbit text-lg font-bold text-brand-700">CMD</span>
+          </Link>
+          <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-brand-950">
             {isMenuOpen ? <IconX /> : <IconMenu />}
           </button>
         </div>
-      </nav>
+      </header>
 
-      {/* Menu mobile */}
+      {/* Menu mobile (overlay plein écran) */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
@@ -126,25 +109,21 @@ export const Navbar = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -100 }}
             transition={{ duration: 0.35, ease: 'easeOut' }}
-            className="fixed inset-0 z-40 flex flex-col bg-brand-950 pt-24">
+            className="fixed inset-0 z-40 flex flex-col bg-brand-950 pt-24 overflow-y-auto">
             <div className="flex flex-col items-center gap-0">
               {navLinks.map((link) => (
                 <React.Fragment key={link.name}>
                   <Link href={link.href} onClick={() => setIsMenuOpen(false)}
-                    className="w-full py-7 text-center font-display text-3xl text-white transition-colors hover:text-brand-400">
+                    className="w-full py-6 text-center font-display text-2xl text-white transition-colors hover:text-brand-400">
                     {link.name}
                   </Link>
                   <div className="h-px w-full max-w-xs bg-brand-800 opacity-50" />
                 </React.Fragment>
               ))}
-              <div className="mt-8 flex flex-col w-full px-12 gap-3">
+              <div className="mt-8 flex flex-col w-full px-12 gap-3 pb-12">
                 <Link href="/don" onClick={() => setIsMenuOpen(false)}
                   className="flex items-center justify-center w-full rounded-lg border border-white/70 py-3 text-center font-sans text-base font-bold text-white transition-all duration-300 hover:border-transparent hover:bg-gradient-to-r hover:from-brand-600 hover:to-sky-500">
                   Faire un don
-                </Link>
-                <Link href="/contact" onClick={() => setIsMenuOpen(false)}
-                  className="block w-full rounded-lg border border-brand-500 bg-gradient-to-r from-brand-600 to-sky-500 py-3 text-center font-sans text-base font-bold text-white transition-all duration-300">
-                  Nous rejoindre
                 </Link>
               </div>
             </div>

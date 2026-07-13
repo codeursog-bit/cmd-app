@@ -188,7 +188,7 @@ export default function ContactPage() {
         </section>
 
         {/* RIGHT PANEL */}
-        <section className="relative flex flex-col bg-white p-12 pt-24 lg:w-[60%] lg:p-32 lg:pt-32">
+        <section className="relative flex flex-col bg-white p-12 pt-16 lg:w-[60%] lg:p-32 lg:pt-24">
           <AnimatePresence mode="wait">
             {status === "success" ? (
               <motion.div

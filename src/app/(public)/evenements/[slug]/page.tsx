@@ -94,7 +94,7 @@ export default async function EvenementPublicPage({ params }: Props) {
       <div className="min-h-screen bg-white">
 
         {/* ── Hero ── */}
-        <div className="bg-brand-950 pt-24 pb-16 px-6">
+        <div className="bg-brand-950 pt-16 pb-16 px-6">
           <div className="max-w-4xl mx-auto">
             <Link href="/evenements" className="inline-flex items-center gap-2 text-brand-400 hover:text-brand-200 text-sm font-medium mb-8 transition-colors">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>

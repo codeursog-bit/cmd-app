@@ -64,6 +64,7 @@ const config: Config = {
       },
       fontFamily: {
         display: ['Poppins', 'sans-serif'],
+        orbit:   ['Orbit', 'sans-serif'],
         sans:    ['DM Sans', 'sans-serif'],
         mono:    ['JetBrains Mono', 'monospace'],
       },

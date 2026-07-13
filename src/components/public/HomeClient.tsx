@@ -1,10 +1,10 @@
 'use client'
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import { useApi } from '@/hooks/useApi'
 import { apiFetch } from '@/hooks/useApi'
-import PostCard from '@/components/public/PostCard'
 import NewsTicker from '@/components/public/NewsTicker'
+import HeroSlider from '@/components/public/HeroSlider'
 
 interface Post {
   id: string; title: string; excerpt: string | null; type: string; slug: string
@@ -16,35 +16,7 @@ interface Event {
   location: string | null; description: string | null; status: string
 }
 
-const HERO_VIDEOS = [
-  { src: '/videos/church-bg.mp4', duration: 20000 },
-]
-
-function HeroVideo() {
-  const [current, setCurrent] = useState(0)
-  const [fading, setFading]   = useState(false)
-  const timerRef = useRef<ReturnType<typeof setTimeout>>()
-
-  const goTo = (index: number) => {
-    clearTimeout(timerRef.current)
-    setFading(true)
-    setTimeout(() => { setCurrent(index); setFading(false) }, 700)
-  }
-  const goNext = () => goTo((current + 1) % HERO_VIDEOS.length)
-
-  useEffect(() => {
-    if (HERO_VIDEOS.length <= 1) return
-    timerRef.current = setTimeout(goNext, HERO_VIDEOS[current].duration)
-    return () => clearTimeout(timerRef.current)
-  }, [current])
-
-  return (
-    <video key={HERO_VIDEOS[current].src} autoPlay muted loop={HERO_VIDEOS.length === 1} playsInline preload="auto"
-      className={`absolute inset-0 w-full h-full object-cover z-0 transition-opacity duration-700 ${fading ? 'opacity-0' : 'opacity-100'}`}>
-      <source src={HERO_VIDEOS[current].src} type="video/mp4" />
-    </video>
-  )
-}
+const TYPE_LABELS: Record<string, string> = { ARTICLE: 'Article', SERMON: 'Prédication', TESTIMONY: 'Témoignage', ANNOUNCEMENT: 'Annonce' }
 
 export default function HomeClient() {
   const [email, setEmail]     = useState('')
@@ -81,83 +53,11 @@ export default function HomeClient() {
     ...upcoming.slice(0, 3).map(e => ({ id: e.id, label: `À venir : ${e.title}` })),
   ]
 
-  const featuredDate = featured ? new Date(featured.startDate) : null
-
   return (
     <div className="min-h-screen bg-white selection:bg-brand-500 selection:text-white">
 
-      {/* HERO — bannière événement (esprit de l'image, format desktop) */}
-      <section className="relative w-full min-h-[92vh] overflow-hidden flex items-center pt-24">
-        <HeroVideo />
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-950/95 via-brand-900/90 to-sky-900/80 z-0" />
-        {/* Touches orange décoratives */}
-        <div className="absolute -right-32 -top-32 w-[500px] h-[500px] bg-accent-600/20 rounded-full blur-3xl z-0" />
-
-        <div className="relative z-10 container mx-auto px-6 py-16">
-          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,420px)_1fr] gap-12 items-center">
-
-            {/* Colonne portrait / identité */}
-            <div className="flex flex-col items-start">
-              <div className="relative w-full aspect-[4/5] max-w-sm bg-brand-800/60 border border-brand-700 rounded-2xl overflow-hidden flex items-center justify-center">
-                <span className="text-brand-400 text-sm italic px-6 text-center">[Photo : Pasteur / Visionnaire]</span>
-                <div className="absolute bottom-0 left-0 right-0 bg-brand-950/90 backdrop-blur-sm px-5 py-4">
-                  <p className="font-display font-bold text-white text-base leading-tight">Pr. Jean Pasteur YALAKA</p>
-                  <p className="font-sans text-brand-300 text-xs mt-1 uppercase tracking-wider">Visionnaire des Églises C.M.D</p>
-                </div>
-              </div>
-              <div className="mt-8 hidden lg:block">
-                <span className="font-sans font-light tracking-[0.3em] text-brand-300 text-xs uppercase">Communauté des</span>
-                <p className="font-display font-extrabold text-3xl text-white leading-none mt-1">MESSAGERS DE DIEU</p>
-              </div>
-            </div>
-
-            {/* Colonne événement */}
-            <div>
-              <h1 className="font-display font-extrabold text-4xl md:text-6xl xl:text-7xl leading-[0.95] text-white">
-                Grande Culte de<br />
-                <span className="text-accent-400">Pentecôte</span>
-              </h1>
-
-              <div className="flex flex-wrap items-center gap-4 mt-8">
-                {featuredDate ? (
-                  <div className="flex flex-col items-center justify-center bg-accent-600 rounded-xl px-6 py-3 shadow-lg shadow-accent-900/30">
-                    <span className="font-sans text-white text-xs font-bold uppercase tracking-widest">
-                      {['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'][featuredDate.getDay()]}
-                    </span>
-                    <span className="font-display text-2xl font-extrabold text-white leading-none mt-1">
-                      {String(featuredDate.getDate()).padStart(2, '0')} {MONTHS[featuredDate.getMonth()]}
-                    </span>
-                    <span className="font-sans text-white/80 text-xs">{featuredDate.getFullYear()}</span>
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center justify-center bg-accent-600 rounded-xl px-6 py-3">
-                    <span className="font-sans text-white text-xs font-bold uppercase tracking-widest">Dim</span>
-                    <span className="font-display text-2xl font-extrabold text-white leading-none mt-1">24 Mai</span>
-                    <span className="font-sans text-white/80 text-xs">2026</span>
-                  </div>
-                )}
-                <Link href="/contact"
-                  className="bg-white hover:bg-brand-50 text-brand-900 px-8 py-4 rounded-xl font-sans text-sm font-bold tracking-wide uppercase transition-all shadow-lg">
-                  Tu es notre invité !
-                </Link>
-              </div>
-
-              <div className="mt-10 border-t border-brand-700/60 pt-8">
-                <span className="font-sans text-accent-400 text-xs font-bold uppercase tracking-[0.25em]">Au programme</span>
-                <p className="font-sans text-brand-200 text-sm md:text-base leading-relaxed mt-3 max-w-xl">
-                  {featured?.description || 'Moments de Restauration · Moments de Prières · Moments de Louange et Adoration · Sainte Cène · Partage de la parole · Communion Fraternelle · Et bien plus encore…'}
-                </p>
-              </div>
-
-              <div className="flex gap-4 mt-10">
-                <Link href="/actualites?filter=EVENT" className="font-sans text-sm font-bold text-white/80 hover:text-white tracking-widest uppercase border-b border-transparent hover:border-accent-400 transition-all">
-                  Voir tout l&apos;agenda →
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* HERO — slider dynamique alimenté par les dernières actualités */}
+      <HeroSlider />
 
       {/* TICKER ACTUALITÉS — remplace le bandeau "Dernières nouvelles" de l'image */}
       <NewsTicker items={tickerItems} />
@@ -212,26 +112,65 @@ export default function HomeClient() {
         </div>
       </section>
 
-      {/* PUBLICATIONS */}
-      <section className="bg-gradient-to-b from-brand-950 to-sky-950 py-24">
+      {/* FIL D'ACTUALITÉ — style feed façon Facebook */}
+      <section className="bg-neutral-50 py-24">
         <div className="container mx-auto px-6">
-          <div className="text-center">
-            <span className="font-sans text-accent-400 text-sm tracking-[0.2em] uppercase font-bold">Fil d&apos;actualité</span>
-            <h2 className="font-display text-5xl text-white font-extrabold mt-2">Actualités &amp; Enseignements</h2>
+          <div className="text-center mb-16">
+            <span className="font-sans text-accent-600 text-sm tracking-[0.2em] uppercase font-bold">Fil d&apos;actualité</span>
+            <h2 className="font-display text-5xl text-brand-950 font-extrabold mt-2">Actualités &amp; Enseignements</h2>
             <div className="w-[60px] h-[3px] bg-accent-500 mx-auto mt-4" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
-            {posts.length ? posts.map(p => (
-              <PostCard key={p.id} category={p.type} title={p.title} excerpt={p.excerpt || ''}
-                author={`${p.author.firstName} ${p.author.lastName}`}
-                date={p.publishedAt ? new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(p.publishedAt)) : ''}
-                slug={p.slug} coverUrl={p.coverUrl} audioUrl={p.audioUrl} videoUrl={p.videoUrl} />
-            )) : Array(3).fill(0).map((_, i) => (
-              <div key={i} className="bg-brand-900 rounded-xl h-72 animate-pulse" />
+
+          <div className="max-w-2xl mx-auto space-y-5">
+            {posts.length ? posts.map(p => {
+              const initials = `${p.author.firstName?.[0] || ''}${p.author.lastName?.[0] || ''}`.toUpperCase()
+              const timeAgo = (() => {
+                if (!p.publishedAt) return ''
+                const diffMs = Date.now() - new Date(p.publishedAt).getTime()
+                const h = Math.floor(diffMs / 3_600_000)
+                if (h < 1) return "à l'instant"
+                if (h < 24) return `il y a ${h} h`
+                const d = Math.floor(h / 24)
+                if (d < 7) return `il y a ${d} j`
+                return new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long' }).format(new Date(p.publishedAt))
+              })()
+              return (
+                <Link key={p.id} href={`/blog/${p.slug}`}
+                  className="group block bg-white border border-neutral-200 rounded-xl overflow-hidden hover:shadow-md transition-all">
+                  <div className="flex items-center gap-3 px-5 pt-5">
+                    <div className="w-11 h-11 rounded-full bg-brand-600 flex items-center justify-center text-white font-bold text-sm shrink-0">
+                      {initials || 'CM'}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-sans font-bold text-sm text-brand-950 truncate">{p.author.firstName} {p.author.lastName}</p>
+                      <p className="font-sans text-xs text-neutral-400">{timeAgo} · <span className="text-accent-600 font-semibold">{TYPE_LABELS[p.type] || p.type}</span></p>
+                    </div>
+                  </div>
+
+                  <div className="px-5 pt-3 pb-4">
+                    <p className="font-display text-lg font-bold text-brand-950 leading-snug group-hover:text-brand-600 transition-colors">{p.title}</p>
+                    {p.excerpt && <p className="font-sans text-sm text-neutral-600 mt-1.5 leading-relaxed line-clamp-3">{p.excerpt}</p>}
+                  </div>
+
+                  {(p.coverUrl || p.videoUrl) && (
+                    <div className="w-full aspect-video bg-neutral-100 border-t border-neutral-100 overflow-hidden">
+                      {p.videoUrl ? (
+                        <video src={p.videoUrl} muted className="w-full h-full object-cover" />
+                      ) : (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={p.coverUrl || ''} alt={p.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      )}
+                    </div>
+                  )}
+                </Link>
+              )
+            }) : Array(3).fill(0).map((_, i) => (
+              <div key={i} className="bg-white border border-neutral-200 rounded-xl h-40 animate-pulse" />
             ))}
           </div>
+
           <div className="flex justify-center mt-12">
-            <Link href="/actualites" className="border border-brand-500 text-brand-300 px-8 py-3 font-sans text-sm font-bold tracking-widest uppercase hover:border-transparent hover:bg-gradient-to-r hover:from-brand-600 hover:to-sky-500 hover:text-white transition-all rounded-lg">
+            <Link href="/actualites" className="border border-brand-500 text-brand-600 px-8 py-3 font-sans text-sm font-bold tracking-widest uppercase hover:border-transparent hover:bg-gradient-to-r hover:from-brand-600 hover:to-sky-500 hover:text-white transition-all rounded-lg">
               Voir toutes les publications
             </Link>
           </div>

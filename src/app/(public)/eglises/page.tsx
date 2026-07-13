@@ -63,7 +63,7 @@ export default function EglisesPage() {
     <div className="min-h-screen bg-white font-sans text-neutral-950 selection:bg-brand-600 selection:text-white">
 
       {/* HERO */}
-      <header className="relative flex h-[350px] w-full flex-col justify-center bg-gradient-to-br from-brand-950 via-brand-900 to-sky-950 px-6 md:px-12 pt-20 overflow-hidden">
+      <header className="relative flex h-[350px] w-full flex-col justify-center bg-gradient-to-br from-brand-950 via-brand-900 to-sky-950 px-6 md:px-12 overflow-hidden">
         <div className="absolute -right-24 -top-24 w-[400px] h-[400px] bg-accent-600/10 rounded-full blur-3xl" />
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="relative mx-auto w-full max-w-7xl">
           <nav className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-brand-400">
