@@ -33,13 +33,6 @@ export default function HomeClient() {
     setSent(true)
   }
 
-  const stats = [
-    { value: '40+', label: 'Années de ministère' },
-    { value: '6+',   label: 'Églises' },
-    { value: '500+',label: 'Membres' },
-    { value: '50+', label: 'Événements par an' },
-  ]
-
   const MONTHS = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc']
   const upcoming = upcomingData?.events || []
   const featured  = upcoming[0]
@@ -62,32 +55,17 @@ export default function HomeClient() {
       {/* TICKER ACTUALITÉS — remplace le bandeau "Dernières nouvelles" de l'image */}
       <NewsTicker items={tickerItems} />
 
-      {/* STATS */}
-      <section className="bg-brand-950 py-12 border-b border-brand-900">
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-0 items-center">
-            {stats.map((s, i) => (
-              <div key={i} className="flex flex-col items-center lg:items-start lg:px-12 relative">
-                <span className="font-display text-5xl text-white font-extrabold leading-none">{s.value}</span>
-                <span className="font-sans text-brand-300 text-xs tracking-wider uppercase mt-3">{s.label}</span>
-                {i < stats.length - 1 && <div className="hidden lg:block absolute right-0 top-1/2 -translate-y-1/2 w-[1px] h-12 bg-brand-800" />}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* BIENVENUE */}
       <section className="bg-white py-24">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-            <div className="relative">
+            <div className="relative pb-4 pr-4">
               <div className="absolute -top-4 -left-4 w-10 h-10 border-t-[3px] border-l-[3px] border-accent-500 z-10" />
               <div className="bg-neutral-200 aspect-[4/5] w-full flex items-center justify-center relative rounded-lg overflow-hidden">
                 <span className="text-neutral-400 text-sm italic">[Photo : l&apos;assemblée en culte]</span>
-                <div className="absolute -bottom-4 -right-4 bg-white border border-neutral-200 px-4 py-2 z-20 rounded">
-                  <span className="block font-sans font-bold text-brand-950 text-sm uppercase tracking-widest">Depuis 1985</span>
-                </div>
+              </div>
+              <div className="absolute bottom-0 right-0 bg-white border border-neutral-200 shadow-lg px-5 py-2.5 z-20 rounded">
+                <span className="block font-sans font-bold text-brand-950 text-sm uppercase tracking-widest whitespace-nowrap">Depuis 1985</span>
               </div>
             </div>
             <div className="lg:pl-12">

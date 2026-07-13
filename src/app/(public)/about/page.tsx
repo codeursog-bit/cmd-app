@@ -74,13 +74,13 @@ export default function AboutPage() {
                 <footer className="mt-1 font-sans not-italic text-xs text-neutral-400 uppercase tracking-wider">Matthieu 28:19</footer>
               </blockquote>
             </div>
-            <div className="relative">
+            <div className="relative pb-4 pr-4">
               <div className="absolute -top-4 -left-4 w-10 h-10 border-t-[3px] border-l-[3px] border-accent-500 z-10" />
               <div className="bg-neutral-100 aspect-[4/5] w-full flex items-center justify-center relative rounded-lg overflow-hidden border border-neutral-200">
                 <span className="text-neutral-400 italic text-sm px-6 text-center">[Photo : Fondateurs de la CMD]</span>
-                <div className="absolute -bottom-4 -right-4 bg-white border border-neutral-200 px-4 py-2 z-20 rounded">
-                  <span className="block font-sans font-bold text-brand-950 text-sm uppercase tracking-widest">Depuis 1985</span>
-                </div>
+              </div>
+              <div className="absolute bottom-0 right-0 bg-white border border-neutral-200 shadow-lg px-5 py-2.5 z-20 rounded">
+                <span className="block font-sans font-bold text-brand-950 text-sm uppercase tracking-widest whitespace-nowrap">Depuis 1985</span>
               </div>
             </div>
           </div>

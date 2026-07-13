@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { AnimatePresence, motion } from 'motion/react'
+import { useScrollPosition } from '@/hooks/useScrollPosition'
 import { apiFetch } from '@/hooks/useApi'
 
 // ── Icônes SVG ────────────────────────────────────────────────────────────────
@@ -47,6 +48,8 @@ const IconTiktok = () => (
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const pathname = usePathname()
+  const scrollY = useScrollPosition()
+  const showStickyBar = scrollY > 220
 
   const navLinks = [
     { name: 'Accueil',                     href: '/' },
@@ -100,6 +103,43 @@ export const Navbar = () => {
           </button>
         </div>
       </header>
+
+      {/* ── Barre fixe avec le logo, visible en permanence au scroll ── */}
+      <AnimatePresence>
+        {showStickyBar && (
+          <motion.div
+            initial={{ y: -80, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -80, opacity: 0 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+            className="fixed top-0 left-0 z-50 w-full bg-white shadow-md">
+            <div className="container mx-auto flex items-center justify-between px-6 py-2.5">
+              <Link href="/" className="flex items-center gap-2.5">
+                <img src="/logo-cmd.png" alt="CMD Logo" className="h-9 w-9 object-contain" />
+                <span className="font-orbit text-base font-bold text-brand-700 hidden sm:block">
+                  COMMUNAUTÉ DES MESSAGERS DE DIEU
+                </span>
+              </Link>
+              <div className="hidden lg:flex items-center gap-8">
+                {navLinks.map(link => {
+                  const active = pathname === link.href
+                  return (
+                    <Link key={link.name} href={link.href}
+                      className={`font-sans text-sm font-medium transition-colors ${
+                        active ? 'text-accent-600 font-bold' : 'text-neutral-700 hover:text-brand-600'
+                      }`}>
+                      {link.name}
+                    </Link>
+                  )
+                })}
+              </div>
+              <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="lg:hidden text-brand-950">
+                {isMenuOpen ? <IconX /> : <IconMenu />}
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Menu mobile (overlay plein écran) */}
       <AnimatePresence>
