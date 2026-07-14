@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
+import { AnimatePresence, motion } from 'motion/react'
 import { useApi } from '@/hooks/useApi'
 
 interface Post {
@@ -74,16 +75,33 @@ export default function HeroSlider() {
 
   return (
     <section className="relative w-full aspect-[21/9] md:aspect-[3/1] bg-brand-950 overflow-hidden">
-      <Link href={slide.href} className="absolute inset-0 block">
-        {slide.videoUrl ? (
-          <video key={slide.videoUrl} autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover">
-            <source src={slide.videoUrl} type="video/mp4" />
-          </video>
-        ) : (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img key={slide.coverUrl || slide.id} src={slide.coverUrl || ''} alt={slide.title} className="absolute inset-0 w-full h-full object-cover" />
-        )}
-      </Link>
+      <AnimatePresence>
+        <motion.div
+          key={slide.id}
+          initial={{ opacity: 0, scale: 1.06 }}
+          animate={{ opacity: 1, scale: 1.14 }}
+          exit={{ opacity: 0, scale: 1.14, transition: { duration: 0.9, ease: 'easeInOut' } }}
+          transition={{
+            opacity: { duration: 1, ease: 'easeInOut' },
+            scale: { duration: 7, ease: 'linear' },
+          }}
+          className="absolute inset-0"
+        >
+          <Link href={slide.href} className="absolute inset-0 block">
+            {slide.videoUrl ? (
+              <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover">
+                <source src={slide.videoUrl} type="video/mp4" />
+              </video>
+            ) : (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={slide.coverUrl || ''} alt={slide.title} className="absolute inset-0 w-full h-full object-cover" />
+            )}
+          </Link>
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Voile dégradé discret pour la lisibilité des flèches/points */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/30 to-transparent z-10" />
 
       {/* Flèches */}
       {slides.length > 1 && (
