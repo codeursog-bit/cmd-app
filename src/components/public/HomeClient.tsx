@@ -23,9 +23,10 @@ export default function HomeClient() {
   const [firstName, setFirst] = useState('')
   const [sent, setSent]       = useState(false)
 
-  const { data: postsData }        = useApi<{ posts: Post[] }>('/api/posts?limit=3&status=PUBLISHED')
+  const { data: postsData }        = useApi<{ posts: Post[] }>('/api/posts?limit=8&status=PUBLISHED')
   const { data: upcomingData }     = useApi<{ events: Event[] }>('/api/events?status=UPCOMING&limit=6')
   const { data: recentEventsData } = useApi<{ events: Event[] }>('/api/events?status=COMPLETED&limit=3')
+  const { data: testimoniesData }  = useApi<{ posts: Post[] }>('/api/posts?type=TESTIMONY&limit=3&status=PUBLISHED')
 
   const handleSubscribe = async () => {
     if (!email || !firstName) return
@@ -40,6 +41,7 @@ export default function HomeClient() {
   const recent    = recentEventsData?.events || []
 
   const posts = postsData?.posts || []
+  const testimonies = testimoniesData?.posts || []
   const tickerItems = [
     { id: 'announce-1', label: 'Lancement de la préparation du Retour au réveil Charismatique' },
     ...posts.map(p => ({ id: p.id, label: p.title })),
@@ -90,6 +92,70 @@ export default function HomeClient() {
         </div>
       </section>
 
+      {/* CITATION — parole de l'homme de Dieu */}
+      <section className="bg-brand-50 py-24">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-14 items-center">
+            <div>
+              <svg width="48" height="36" viewBox="0 0 48 36" fill="none" className="text-accent-500 mb-6">
+                <path d="M0 36V21.6C0 14.4 1.8 8.7 5.4 4.5C9 1.5 13.5 0 18.9 0V7.2C15.3 7.5 12.6 8.7 10.8 10.8C9 12.9 8.1 15.6 8.1 18.9H18.9V36H0ZM28.8 36V21.6C28.8 14.4 30.6 8.7 34.2 4.5C37.8 1.5 42.3 0 47.7 0V7.2C44.1 7.5 41.4 8.7 39.6 10.8C37.8 12.9 36.9 15.6 36.9 18.9H47.7V36H28.8Z" fill="currentColor"/>
+              </svg>
+              <blockquote className="font-display text-2xl md:text-4xl font-bold text-brand-950 leading-tight">
+                « La foi n&apos;est pas l&apos;absence de doute, c&apos;est la décision de marcher malgré le doute, avec la certitude que Dieu tient nos pas. »
+              </blockquote>
+              <div className="mt-8 flex items-center gap-3">
+                <div className="w-1 h-10 bg-accent-500 rounded-full" />
+                <div>
+                  <p className="font-sans font-bold text-brand-950 text-sm">Pr. Jean Pasteur YALAKA</p>
+                  <p className="font-sans text-neutral-500 text-xs uppercase tracking-wider">Visionnaire des Églises C.M.D</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="relative w-full max-w-sm mx-auto aspect-[4/5] bg-brand-900 rounded-2xl overflow-hidden flex items-center justify-center border border-brand-800">
+              <span className="text-brand-400 text-sm italic px-6 text-center">[Photo : Pasteur / Visionnaire]</span>
+              <div className="absolute bottom-0 left-0 right-0 bg-brand-950/90 backdrop-blur-sm px-5 py-4">
+                <p className="font-display font-bold text-white text-sm leading-tight">Pr. Jean Pasteur YALAKA</p>
+                <p className="font-sans text-brand-300 text-xs mt-1 uppercase tracking-wider">Visionnaire des Églises C.M.D</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* TÉMOIGNAGES — n'apparaît que si des témoignages ont été publiés */}
+      {testimonies.length > 0 && (
+        <section className="bg-white py-24 border-t border-neutral-100">
+          <div className="container mx-auto px-6">
+            <div className="text-center mb-16">
+              <span className="font-sans text-accent-600 text-sm tracking-[0.2em] uppercase font-bold">Vies transformées</span>
+              <h2 className="font-display text-4xl text-brand-950 font-extrabold mt-2">Témoignages</h2>
+              <div className="w-[60px] h-[3px] bg-accent-500 mx-auto mt-4" />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {testimonies.map(t => {
+                const initials = `${t.author.firstName?.[0] || ''}${t.author.lastName?.[0] || ''}`.toUpperCase()
+                return (
+                  <Link key={t.id} href={`/blog/${t.slug}`}
+                    className="group bg-neutral-50 hover:bg-brand-50 border border-neutral-100 rounded-xl p-7 transition-colors">
+                    <svg width="28" height="21" viewBox="0 0 48 36" fill="none" className="text-accent-400 mb-4">
+                      <path d="M0 36V21.6C0 14.4 1.8 8.7 5.4 4.5C9 1.5 13.5 0 18.9 0V7.2C15.3 7.5 12.6 8.7 10.8 10.8C9 12.9 8.1 15.6 8.1 18.9H18.9V36H0ZM28.8 36V21.6C28.8 14.4 30.6 8.7 34.2 4.5C37.8 1.5 42.3 0 47.7 0V7.2C44.1 7.5 41.4 8.7 39.6 10.8C37.8 12.9 36.9 15.6 36.9 18.9H47.7V36H28.8Z" fill="currentColor"/>
+                    </svg>
+                    <p className="font-sans text-sm text-neutral-600 leading-relaxed line-clamp-4">{t.excerpt || t.title}</p>
+                    <div className="flex items-center gap-2.5 mt-6">
+                      <div className="w-8 h-8 rounded-full bg-brand-600 flex items-center justify-center text-white font-bold text-[11px] shrink-0">
+                        {initials || 'CM'}
+                      </div>
+                      <p className="font-sans font-bold text-xs text-brand-950">{t.author.firstName} {t.author.lastName}</p>
+                    </div>
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* FIL D'ACTUALITÉ — style feed façon Facebook */}
       <section className="bg-neutral-50 py-24">
         <div className="container mx-auto px-6">
@@ -99,8 +165,8 @@ export default function HomeClient() {
             <div className="w-[60px] h-[3px] bg-accent-500 mx-auto mt-4" />
           </div>
 
-          <div className="max-w-2xl mx-auto space-y-5">
-            {posts.length ? posts.map(p => {
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {posts.length ? posts.slice(0, 8).map(p => {
               const initials = `${p.author.firstName?.[0] || ''}${p.author.lastName?.[0] || ''}`.toUpperCase()
               const timeAgo = (() => {
                 if (!p.publishedAt) return ''
@@ -114,36 +180,47 @@ export default function HomeClient() {
               })()
               return (
                 <Link key={p.id} href={`/blog/${p.slug}`}
-                  className="group block bg-white border border-neutral-200 rounded-xl overflow-hidden hover:shadow-md transition-all">
-                  <div className="flex items-center gap-3 px-5 pt-5">
-                    <div className="w-11 h-11 rounded-full bg-brand-600 flex items-center justify-center text-white font-bold text-sm shrink-0">
+                  className="group flex flex-col bg-white border border-neutral-200 rounded-xl overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+
+                  {/* Image / placeholder en haut */}
+                  <div className="relative w-full aspect-[4/3] bg-gradient-to-br from-brand-100 to-brand-50 overflow-hidden">
+                    {p.videoUrl ? (
+                      <video src={p.videoUrl} muted className="w-full h-full object-cover" />
+                    ) : p.coverUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={p.coverUrl} alt={p.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-brand-200">
+                          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                        </svg>
+                      </div>
+                    )}
+                    <span className="absolute top-3 left-3 px-2.5 py-1 bg-brand-950/90 backdrop-blur-sm text-white text-[10px] font-bold uppercase tracking-widest rounded-full">
+                      {TYPE_LABELS[p.type] || p.type}
+                    </span>
+                  </div>
+
+                  {/* Auteur */}
+                  <div className="flex items-center gap-2.5 px-4 pt-4">
+                    <div className="w-8 h-8 rounded-full bg-brand-600 flex items-center justify-center text-white font-bold text-[11px] shrink-0">
                       {initials || 'CM'}
                     </div>
                     <div className="min-w-0">
-                      <p className="font-sans font-bold text-sm text-brand-950 truncate">{p.author.firstName} {p.author.lastName}</p>
-                      <p className="font-sans text-xs text-neutral-400">{timeAgo} · <span className="text-accent-600 font-semibold">{TYPE_LABELS[p.type] || p.type}</span></p>
+                      <p className="font-sans font-bold text-xs text-brand-950 truncate">{p.author.firstName} {p.author.lastName}</p>
+                      <p className="font-sans text-[11px] text-neutral-400">{timeAgo}</p>
                     </div>
                   </div>
 
-                  <div className="px-5 pt-3 pb-4">
-                    <p className="font-display text-lg font-bold text-brand-950 leading-snug group-hover:text-brand-600 transition-colors">{p.title}</p>
-                    {p.excerpt && <p className="font-sans text-sm text-neutral-600 mt-1.5 leading-relaxed line-clamp-3">{p.excerpt}</p>}
+                  {/* Titre + extrait */}
+                  <div className="px-4 pt-3 pb-5 flex-1">
+                    <p className="font-display text-base font-bold text-brand-950 leading-snug line-clamp-2 group-hover:text-brand-600 transition-colors">{p.title}</p>
+                    {p.excerpt && <p className="font-sans text-xs text-neutral-500 mt-1.5 leading-relaxed line-clamp-2">{p.excerpt}</p>}
                   </div>
-
-                  {(p.coverUrl || p.videoUrl) && (
-                    <div className="w-full aspect-video bg-neutral-100 border-t border-neutral-100 overflow-hidden">
-                      {p.videoUrl ? (
-                        <video src={p.videoUrl} muted className="w-full h-full object-cover" />
-                      ) : (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={p.coverUrl || ''} alt={p.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                      )}
-                    </div>
-                  )}
                 </Link>
               )
-            }) : Array(3).fill(0).map((_, i) => (
-              <div key={i} className="bg-white border border-neutral-200 rounded-xl h-40 animate-pulse" />
+            }) : Array(8).fill(0).map((_, i) => (
+              <div key={i} className="bg-white border border-neutral-200 rounded-xl h-72 animate-pulse" />
             ))}
           </div>
 
